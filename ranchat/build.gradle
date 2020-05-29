@@ -1,0 +1,29 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'com.seya330'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtime("org.springframework.boot:spring-boot-devtools")
+	compile('org.projectlombok:lombok')
+	compile('org.apache.tomcat.embed:tomcat-embed-jasper')
+	compile('javax.servlet:jstl:1.2')
+	compile("org.springframework.boot:spring-boot-starter-websocket")
+	compile("org.webjar:sockjs-client:1.0.2")
+	compile("org.webjar:stomp-websocket:2.3.3")
+	compile 'org.slf4j:slf4j-api:1.7.5'
+}
+
+test {
+	useJUnitPlatform()
+}
