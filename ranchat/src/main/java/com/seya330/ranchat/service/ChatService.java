@@ -16,8 +16,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import com.seya330.ranchat.bean.ChatUserBean;
 import com.seya330.ranchat.vo.ChatMessage;
-import com.seya330.ranchat.vo.ChatRequest;
 import com.seya330.ranchat.vo.ChatResponse;
 import com.seya330.ranchat.vo.MessageType;
 import com.seya330.ranchat.vo.ChatResponse.ResponseResult;
@@ -25,7 +25,7 @@ import com.seya330.ranchat.vo.ChatResponse.ResponseResult;
 @Service
 public class ChatService {
 	private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
-	private Map<ChatRequest, DeferredResult<ChatResponse>> waitingUsers;
+	private Map<ChatUserBean, DeferredResult<ChatResponse>> waitingUsers;
 	private ReentrantReadWriteLock lock;
 	private Map<String, String> connectedUsers;
 	
@@ -42,21 +42,24 @@ public class ChatService {
 	}
 	
 	@Async("asyncThreadPool")
-    public void joinChatRoom(ChatRequest request, DeferredResult<ChatResponse> deferredResult) {
+    public void joinChatRoom(ChatUserBean user, DeferredResult<ChatResponse> deferredResult) {
         logger.info("## Join chat room request. {}[{}]", Thread.currentThread().getName(), Thread.currentThread().getId());
-        if (request == null || deferredResult == null) {
+        if (user == null || deferredResult == null) {
             return;
         }
 
         try {
         	lock.writeLock().lock();
-        	waitingUsers.put(request, deferredResult);
+        	waitingUsers.put(user, deferredResult);
         }finally {
         	lock.writeLock().unlock();
         	establishChatRoom();
         }
     }
 	
+	/**
+	 * 두명의 참가자가 접속하여 방 생성
+	 * */
     public void establishChatRoom() {
         try {
             logger.info("Current waiting users : " + waitingUsers.size());
@@ -65,9 +68,9 @@ public class ChatService {
                 return;
             }
 
-            Iterator<ChatRequest> itr = waitingUsers.keySet().iterator();
-            ChatRequest user1 = itr.next();
-            ChatRequest user2 = itr.next();
+            Iterator<ChatUserBean> itr = waitingUsers.keySet().iterator();
+            ChatUserBean user1 = itr.next();
+            ChatUserBean user2 = itr.next();
 
             String uuid = UUID.randomUUID().toString();
 

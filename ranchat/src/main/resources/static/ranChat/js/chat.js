@@ -5,15 +5,15 @@ var sessionId;
 var roomId;
 
 function joinRoom(){
-	var name = $("#name").val();
-	if(!name){
+	var userName = $("#userName").val();
+	if(!userName){
 		alert("이름을 입력해 주세요.");
 		return;
 	}
 	$.ajax({
 		url: 		"/join",
 		header: 	{"Content-type": "application/json"},
-		data: 		{"name": name},
+		data: 		{"userName": userName},
 		beforeSend: function(){setConnecting(true)},
 		success:	function(chatResponse){
 			if(!chatResponse){
@@ -23,10 +23,8 @@ function joinRoom(){
 			}
 			
 			if(chatResponse.responseResult == "SUCCESS"){
-				console.log("SUCCESS");
 				sessionId = chatResponse.sessionId;
 				roomId = chatResponse.chatRoomId;
-				console.log("sessionId : " + sessionId + " roomId : " + roomId);
 				connectSockAndSubscribe();
 			}else if(chatResponse.reponseResult == "CANCEL"){
 				
@@ -59,7 +57,6 @@ function setConnected(isConnect){
 		$("#connectBtn").attr("disabled", false);
 		$("#disConnectBtn").attr("disabled", true);
 		$("#name").attr("disabled", false);
-		$("#name").val("");
 		$("#sendChatBtn").attr("disabled", true);
 	}
 }
@@ -70,6 +67,7 @@ function connectSockAndSubscribe(){
 	stompClient.connect({chatRoomId: roomId}, function(frame){
 		console.log("connected: " + frame);
 		subscribeMessage();
+		$("#chatBoxContents").html("");
 	});
 }
 
@@ -77,31 +75,44 @@ function subscribeMessage(){
 	setConnected(true);
 	stompClient.subscribe('/sub/chat/' + roomId, function(result){
 		var chatMessage = JSON.parse(result.body);
-		var lenderHtml;
-		if(chatMessage.senderSessionId == sessionId){
-			renderHtml = $("#sendMsgTemplate").html();
-		}else{
-			renderHtml = $("#recvMsgTemplate").html();
-		}
 		
-		$("#chatBoxContents").append(Mustache.render(renderHtml, chatMessage));
-		$("#chatBox").scrollTop($("#chatBoxContents").height());
+		if(chatMessage.messageType == "CHAT"){
+			drawChatMessage(chatMessage);
+		}else if(chatMessage.messageType == "DISCONNECTED"){
+			disconnect();
+		}else{
+			alert("unavailable Message Type");
+		}
 	});
 }
 
+//접속해제
 function disconnect(){
 	if(stompClient != null){
-		sendBye();
 		stompClient.disconnect();
 	}
 	setConnected(false);
 }
 
+//메세지 전송
 function sendMessage(){
 	stompClient.send("/msg/chat.message/" + roomId, {}, JSON.stringify({
 		senderSessionId: 	sessionId,
 		message: 			$("#btn-input").val(), 
-		messageType: 		"CHAT"
+		messageType: 		"CHAT",
+		sendUserName: 		$("#userName").val() 
 	}));
 	$("#btn-input").val("");
+}
+
+function drawChatMessage(chatMessage){
+	var lenderHtml;
+	if(chatMessage.senderSessionId == sessionId){
+		renderHtml = $("#sendMsgTemplate").html();
+	}else{
+		renderHtml = $("#recvMsgTemplate").html();
+	}
+	
+	$("#chatBoxContents").append(Mustache.render(renderHtml, chatMessage));
+	$("#chatBox").scrollTop($("#chatBoxContents").height());
 }

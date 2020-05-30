@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import com.seya330.ranchat.bean.ChatRoomRepository;
-import com.seya330.ranchat.bean.HelloMessage;
+import com.seya330.ranchat.bean.ChatUserBean;
 import com.seya330.ranchat.service.ChatService;
 import com.seya330.ranchat.util.ServletUtil;
+import com.seya330.ranchat.util.SessionUtil;
 import com.seya330.ranchat.vo.ChatMessage;
-import com.seya330.ranchat.vo.ChatRequest;
 import com.seya330.ranchat.vo.ChatResponse;
 import com.seya330.ranchat.vo.MessageType;
 
@@ -44,15 +44,20 @@ public class MessageHandleController {
 	ChatService chatService;
 	
 	@GetMapping("/join")
-	public DeferredResult<ChatResponse> joinRequest(HelloMessage message){
+	public DeferredResult<ChatResponse> joinRequest(ChatUserBean chatUserBean){
 		String sessionId = ServletUtil.getSession().getId();
-		logger.info("join request. session id : {}, join name : {}", sessionId, message.getName());
-		final ChatRequest user = new ChatRequest(sessionId);
+		final ChatUserBean user = new ChatUserBean(sessionId);
+		SessionUtil.setUser(chatUserBean);
+		logger.info("join request. session id : {}, join user name : {}", sessionId, chatUserBean.getUserName());
+		
 		final DeferredResult<ChatResponse> deferredResult = new DeferredResult<>(null);
 		chatService.joinChatRoom(user, deferredResult);
 		return deferredResult;
 	}
 	
+	/**
+	 * 메세지 발송 
+	 * */
 	@MessageMapping("/chat.message/{chatRoomId}")
 	public void sendMessage(@DestinationVariable("chatRoomId") String chatRoomId, @Payload ChatMessage chatMessage) {
 		logger.info("Request message. roomd id : {} | chat message : {} | principal : {}", chatRoomId, chatMessage);
