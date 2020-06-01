@@ -59,47 +59,35 @@
 	  font-size: 0.9rem;
 	  color: #999;
 	}
-	
-	
-	:root{
-	--loader-width: 50px;
-	--loader-height: 50px;
-	--loader-color-primary: #27ae60;
-	--loader-color-secondary: #eee;
-	--line-width: 3px;
-	--animation-duration: 2s;
-	--loader-initial-scale: 0.1;
-	}
-	.loader,.loader:before,.loader:after{
-		box-sizing: border-box;
-		flex-grow: 0;
-		flex-shrink: 0;
-	}
-	@keyframes rotateplane {
-    0% {
-        transform: perspective(var(--perspective-value)) rotateX(0deg) rotateY(0deg);
-    }
-    50% {
-        transform: perspective(var(--perspective-value)) rotateX(-180.1deg) rotateY(0deg);
-    }
-    100% {
-        transform: perspective(var(--perspective-value)) rotateX(-180deg) rotateY(-179.9deg);
-    }
+
+	.spinning-loader {
+  	width: 50px;
+  	height: 50px;
+ 	border-radius: 50%;
+	border: 5px solid rgba(29, 161, 242, 0.2);
+	border-left-color: rgb(29, 161, 242);
+	background: transparent;
+	animation: rotate-s-loader 1s linear infinite;
+	margin: 6rem auto;
 }
 
-.loader.rotating-plane {
-    --perspective-value: calc(3 * var(--loader-width, 100px));
-    width: var(--loader-width, 100px);
-    height: var(--loader-height, 100px);
-    background: var(--loader-color-primary, #00f);
-    animation: rotateplane var(--animation-duration, 1s) infinite ease-in-out;
+@keyframes rotate-s-loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
+
 </style>
 <script>
 $(function(){
 	$("#connectBtn").off().on("click", function(){joinRoom()});
 	$("#sendChatBtn").off().on("click", function(){sendMessage()});
 	$("#disConnectBtn").off().on("click", function(){disconnect()});
+	
+	$("#loadingCircle").hide();
 });
 </script>
 </head>
@@ -149,10 +137,10 @@ $(function(){
     
     <!-- Chat Box-->
     <div class="col-7 px-0">
-      <div id="chatBox" class="px-4 py-5 chat-box bg-white">
+      <div id="chatBox" class="px-4 py-5 chat-box bg-white ">
       	<div id="chatBoxContents" style="">
       	</div>
-      	<div class="loader rotating-plane" style="margin: 0 auto; vertical_align: middle;"></div>
+      	<div id="loadingCircle" class="spinning-loader" style="position: absolute; left: 50%; top: 50%; margin-left: -25px; margin-top: -25px; display: none;"></div>
       </div>
 
       <!-- Typing area -->

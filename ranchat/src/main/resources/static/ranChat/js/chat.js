@@ -39,6 +39,8 @@ function setConnecting(isConnecting){
 		$("#connectBtn").attr("disabled", true);
 		$("#disConnectBtn").attr("disabled", false);
 		$("#name").attr("disabled", true);
+		
+		$("#loadingCircle").show();
 		//접속중입니다 메세지 출력도 하면 좋음.
 	}else{
 		$("#connectBtn").attr("disabled", false);
@@ -73,6 +75,7 @@ function connectSockAndSubscribe(){
 
 function subscribeMessage(){
 	setConnected(true);
+	$("#loadingCircle").hide();
 	stompClient.subscribe('/sub/chat/' + roomId, function(result){
 		var chatMessage = JSON.parse(result.body);
 		
