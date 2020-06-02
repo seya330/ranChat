@@ -18,11 +18,16 @@
 <title>ranChat</title>
 
 <style>
+	@font-face{
+		font-family: "Cafe24Dangdanghae";
+		src: url("/static/font/Cafe24Dangdanghae.ttf");
+	}
 	body {
 	  background-color: #74EBD5;
 	  background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%);
 	
 	  min-height: 100vh;
+	  font-family: Cafe24Dangdanghae;
 	}
 	
 	::-webkit-scrollbar {
@@ -86,8 +91,10 @@ $(function(){
 	$("#connectBtn").off().on("click", function(){joinRoom()});
 	$("#sendChatBtn").off().on("click", function(){sendMessage()});
 	$("#disConnectBtn").off().on("click", function(){disconnect()});
-	
+	$("#chatText").off().on("keyup", function(){keyDownMapping()});
 	$("#loadingCircle").hide();
+	
+	$("#chatBox").fadeTo(0, 0.5);
 });
 </script>
 </head>
@@ -104,39 +111,8 @@ $(function(){
   </header>
 
   <div class="row rounded-lg overflow-hidden shadow">
-    <!-- Users box-->
-    <div class="col-5 px-0">
-      <div class="bg-white">
-
-        <div class="bg-gray px-4 py-2 bg-light">
-          <p class="h5 mb-0 py-1">접속자</p>
-        </div>
-        
-        <div class="messages-box">
-          <div class="list-group rounded-0">
-          
-          없음
-          <!-- 최근 탭 엘리먼트-->
-            <!-- <a class="list-group-item list-group-item-action list-group-item-light rounded-0">
-              <div class="media"><img src="https://res.cloudinary.com/mhmd/image/upload/v1564960395/avatar_usae7z.svg" alt="user" width="50" class="rounded-circle">
-                <div class="media-body ml-4">
-                  <div class="d-flex align-items-center justify-content-between mb-1">
-                    <h6 class="mb-0">Jason Doe</h6><small class="small font-weight-bold">25 Dec</small>
-                  </div>
-                  <p class="font-italic mb-0 text-small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                </div>
-              </div>
-            </a> -->
-          <!-- /최근 탭 엘리먼트-->
-            
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    
     <!-- Chat Box-->
-    <div class="col-7 px-0">
+    <div class="col-12 px-0" id="fullCover">
       <div id="chatBox" class="px-4 py-5 chat-box bg-white ">
       	<div id="chatBoxContents" style="">
       	</div>
@@ -144,18 +120,20 @@ $(function(){
       </div>
 
       <!-- Typing area -->
-      <form action="#" class="bg-light">
         <div class="input-group">
-          <input id="btn-input" type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">
+          <input id="chatText" type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">
           <div class="input-group-append">
-            <button id="sendChatBtn" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
+            <button id="sendChatBtn" class="btn bg-light"> <i class="fa fa-paper-plane"></i></button>
           </div>
         </div>
-      </form>
+        	<span class="col-3">이름 : </span><input type="text" id="userName" class="form-control col-5" style="display: inline">
+       <button id="connectBtn" class="btn btn-info">채팅 접속</button>
+		<button id="disConnectBtn" class="btn btn-danger" disabled>접속 해제</button>
     </div>
-    <div>이름 : <input type="text" id="userName"></div>
-    <button id="connectBtn" class="btn btn-info">채팅 접속</button>
-	<button id="disConnectBtn" class="btn btn-danger" disabled>접속 해제</button>
+    <div>
+    
+    </div>
+   
   </div>
 </div>
 	

@@ -55,11 +55,13 @@ function setConnected(isConnect){
 		$("#disConnectBtn").attr("disabled", false);
 		$("#name").attr("disabled", true);
 		$("#sendChatBtn").attr("disabled", false);
+		$("#chatBox").fadeTo(300, 1);
 	}else{
 		$("#connectBtn").attr("disabled", false);
 		$("#disConnectBtn").attr("disabled", true);
 		$("#name").attr("disabled", false);
 		$("#sendChatBtn").attr("disabled", true);
+		$("#chatBox").fadeTo(300, 0.6);
 	}
 }
 
@@ -95,21 +97,26 @@ function disconnect(){
 		stompClient.disconnect();
 	}
 	setConnected(false);
+	drawDisconnectMessage();
 }
 
 //메세지 전송
 function sendMessage(){
+	var chatMsg = $("#chatText").val();
+	if(!chatMsg)
+		return;
+	
 	stompClient.send("/msg/chat.message/" + roomId, {}, JSON.stringify({
 		senderSessionId: 	sessionId,
-		message: 			$("#btn-input").val(), 
+		message: 			chatMsg, 
 		messageType: 		"CHAT",
 		sendUserName: 		$("#userName").val() 
 	}));
-	$("#btn-input").val("");
+	$("#chatText").val("");
 }
 
 function drawChatMessage(chatMessage){
-	var lenderHtml;
+	var renderHtml;
 	if(chatMessage.senderSessionId == sessionId){
 		renderHtml = $("#sendMsgTemplate").html();
 	}else{
@@ -119,3 +126,32 @@ function drawChatMessage(chatMessage){
 	$("#chatBoxContents").append(Mustache.render(renderHtml, chatMessage));
 	$("#chatBox").scrollTop($("#chatBoxContents").height());
 }
+
+function keyDownMapping(){
+	if(window.event.keyCode == 13){
+		sendMessage();
+	}
+}
+
+function drawDisconnectMessage(){
+	var renderHtml = $("#recvMsgTemplate").html();
+	var today = new Date();
+	var chatMessage = {
+			"sendUserName": "SYSTEM", 
+			"message": "상대방과 접속이 종료 되었습니다.", 
+			"sendDateString": today.getFullYear()+"-"+ (today.getMonth()+1).toString().zf(2) + "-" + today.getDate().toString().zf(2)
+			+ " " + today.getHours().toString().zf(2) + ":" + today.getMinutes().toString().zf(2) + ":" 
+			+ today.getSeconds().toString().zf(2)
+	};
+	
+	$("#chatBoxContents").append(Mustache.render(renderHtml, chatMessage));
+	$("#chatBox").scrollTop($("#chatBoxContents").height());
+}
+
+String.prototype.zf = function(len){
+	var tmp = "";
+	for(var i=0; i<len-this.length; i++){
+		tmp += "0";
+	}
+	return tmp + this;
+};
