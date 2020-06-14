@@ -39,24 +39,25 @@ function setConnecting(isConnecting){
 		$("#connectBtn").attr("disabled", true);
 		$("#disConnectBtn").attr("disabled", false);
 		$("#name").attr("disabled", true);
-		
 		$("#loadingCircle").show();
 		//접속중입니다 메세지 출력도 하면 좋음.
 	}else{
 		$("#connectBtn").attr("disabled", false);
 		$("#disConnectBtn").attr("disabled", true);
-		$("#name").attr("disabled", false);
+		$("#name").attr("disabled", false);		
 		//접속중입니다 메세지 없애야함.
 	}
 }
 function setConnected(isConnect){
 	if(isConnect){
+		$("#loadingCircle").hide();
 		$("#connectBtn").attr("disabled", true);
 		$("#disConnectBtn").attr("disabled", false);
 		$("#name").attr("disabled", true);
 		$("#sendChatBtn").attr("disabled", false);
 		$("#chatBox").fadeTo(300, 1);
 	}else{
+		$("#loadingCircle").hide();
 		$("#connectBtn").attr("disabled", false);
 		$("#disConnectBtn").attr("disabled", true);
 		$("#name").attr("disabled", false);
@@ -69,7 +70,6 @@ function connectSockAndSubscribe(){
 	var socket = new SockJS("/endPoint");
 	stompClient = Stomp.over(socket);
 	stompClient.connect({chatRoomId: roomId}, function(frame){
-		console.log("connected: " + frame);
 		subscribeMessage();
 		$("#chatBoxContents").html("");
 	});
@@ -77,7 +77,7 @@ function connectSockAndSubscribe(){
 
 function subscribeMessage(){
 	setConnected(true);
-	$("#loadingCircle").hide();
+	
 	stompClient.subscribe('/sub/chat/' + roomId, function(result){
 		var chatMessage = JSON.parse(result.body);
 		
