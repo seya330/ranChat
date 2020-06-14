@@ -100,7 +100,7 @@ public class ChatService {
     }
     
     public void disconnectUser(String websocketSessionId) {
-    	String chatRoomId = connectedUsers.get(websocketSessionId);
+    	String chatRoomId = connectedUsers.remove(websocketSessionId);
     	ChatMessage chatMessage = new ChatMessage();
     	
     	chatMessage.setMessageType(MessageType.DISCONNECTED);
