@@ -1,0 +1,7 @@
+@font-face{
+	font-family: "Cafe24Dangdanghae";
+	src: url("/static/font/Cafe24Dangdanghae.ttf");
+}
+body{
+	font-family: Cafe24Dangdanghae;
+}
