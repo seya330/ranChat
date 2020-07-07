@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seya330.ranchat.dao.ChatRoomDAO">
+	<insert id="insertChatRoom" parameterType="com.seya330.ranchat.chat.vo.ChatRoomVO">
+		INSERT INTO CHAT_ROOM(
+			CHAT_ROOM_ID
+			, CHAT_ROOM_NAME
+			, REG_DATE
+		)VALUES(
+			#{chatRoomId, jdbcType=VARCHAR}
+			, #{chatRoomName, jdbcType=VARCHAR}
+			, NOW()
+		)
+	</insert>
+	
+	<insert id="insertChatRoomJoinner" parameterType="com.seya330.ranchat.chat.vo.ChatRoomJoinnerVO">
+		INSERT INTO CHAT_ROOM_JOINNER(
+			CHAT_ROOM_ID
+			, JOINNER_ID
+			, JOIN_STATUS
+			, JOIN_DATE
+			, UPDT_DATE
+		)VALUES(
+			#{chatRoomId, jdbcType=VARCHAR}
+			, #{joinnerId, jdbcType=VARCHAR}
+			, 'U'
+			, NOW()
+			, NOW()
+		)
+	</insert>
+	
+	<select id="selectChatRoom" parameterType="com.seya330.ranchat.chat.vo.ChatRoomVO" resultType="com.seya330.ranchat.chat.vo.ChatRoomVO">
+		SELECT
+			ROOM.CHAT_ROOM_ID
+			, ROOM.REG_DATE
+			, (SELECT MESSAGE_CONTENTS FROM CHAT_ROOM_MESSAGE MSG WHERE MSG.CHAT_ROOM_ID = ROOM.CHAT_ROOM_ID ORDER BY REG_DATE DESC LIMIT 1) SUMMARY
+			, (SELECT COUNT(*) FROM CHAT_MESSAGE_INFO WHERE RECEIVER_ID = #{regUserBean.uniqId, jdbcType=VARCHAR} AND CHAT_ROOM_ID = ROOM.CHAT_ROOM_ID AND READ_YN = 'N') UNREAD_CNT
+		FROM
+			CHAT_ROOM ROOM
+			INNER JOIN
+			CHAT_ROOM_JOINNER JOINNER
+			ON ROOM.CHAT_ROOM_ID = JOINNER.CHAT_ROOM_ID
+			<where>
+			<if test="regUserBean.uniqId != null">
+			AND JOINNER.JOINNER_ID = #{regUserBean.uniqId, jdbcType=VARCHAR}
+			</if>
+			</where>
+	</select>
+	
+	<select id="selectChatRoomJoinner" parameterType="com.seya330.ranchat.chat.vo.ChatRoomJoinnerVO" resultType="com.seya330.ranchat.chat.vo.ChatRoomJoinnerVO">
+		SELECT
+			CHAT_ROOM_ID
+			, USER_ID
+			, UNIQ_ID
+		FROM
+			CHAT_ROOM_JOINNER JOINNER
+			LEFT JOIN
+			REG_USER USER
+			ON JOINNER.JOINNER_ID = USER.UNIQ_ID
+			WHERE
+				USER.USER_STATUS = #{userStatus, jdbcType=VARCHAR}
+				<if test="chatRoomId != null">
+					AND JOINNER.CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
+				</if>
+	</select>
+</mapper>

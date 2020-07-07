@@ -6,13 +6,13 @@
 		<title>Generic - Projection by TEMPLATED</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" href="/static/template/assets/css/main.css" />
-		<link rel="stylesheet" type="text/css" href="/static/ranchat/css/common.css"/>
+		<link rel="stylesheet" href="/resources/template/assets/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="/resources/ranchat/css/common.css"/>
 	<!-- Scripts -->
-		<script src="/static/template/assets/js/jquery.min.js"></script>
-		<script src="/static/template/assets/js/skel.min.js"></script>
-		<script src="/static/template/assets/js/util.js"></script>
-		<script src="/static/template/assets/js/main.js"></script>
+		<script src="/resources/template/assets/js/jquery.min.js"></script>
+		<script src="/resources/template/assets/js/skel.min.js"></script>
+		<script src="/resources/template/assets/js/util.js"></script>
+		<script src="/resources/template/assets/js/main.js"></script>
 	</head>
 	<body class="subpage">
 	<!-- Header -->

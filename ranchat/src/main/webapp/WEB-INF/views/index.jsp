@@ -1,20 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
 	<title>ranchat</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="/static/template/assets/css/main.css" />
-	<link rel="stylesheet" type="text/css" href="/static/ranchat/css/common.css"/>
+	<link rel="stylesheet" href="/resources/template/assets/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="/resources/ranchat/css/common.css"/>
 	<!-- Scripts -->
-	<script src="/static/template/assets/js/jquery.min.js"></script>
-	<script src="/static/template/assets/js/skel.min.js"></script>
-	<script src="/static/template/assets/js/util.js"></script>
-	<script src="/static/template/assets/js/main.js"></script>
+	<script src="/resources/template/assets/js/jquery.min.js"></script>
+	<script src="/resources/template/assets/js/skel.min.js"></script>
+	<script src="/resources/template/assets/js/util.js"></script>
+	<script src="/resources/template/assets/js/main.js"></script>
+	<script>
+	$(function(){
+		$("#randomChatArea").on("click", function(){
+			location.href="/randomChat";
+		});
+	});
+	</script>
 </head>
 <body>
-	<jsp:include page="/WEB-INF/views/chat/header.jsp" />
+	<%@ include file="/WEB-INF/views/chat/header.jsp"%>
 
 	<!-- Banner -->
 		<section id="banner">
@@ -25,29 +36,31 @@
 
 				<div class="flex ">
 
-					<div>
-						<span class="icon fa-car"></span>
-						<h3>Aliquam</h3>
-						<p>Suspendisse amet ullamco</p>
+					<div id="randomChatArea" style="cursor: pointer;">
+						<span class="icon fa-random"></span>
+						<h3>랜덤채팅</h3>
+						<p>익명의 상대와 1대1 채팅</p>
 					</div>
 
 					<div>
-						<span class="icon fa-camera"></span>
-						<h3>Elementum</h3>
-						<p>Class aptent taciti ad litora</p>
+						<span class="icon fa-laptop"></span>
+						<h3>단체 채팅</h3>
+						<p>친구들과 단체 채팅</p>
 					</div>
 
 					<div>
-						<span class="icon fa-bug"></span>
-						<h3>Ultrices</h3>
-						<p>Nulla vitae mauris non felis</p>
+						<span class="icon fa-paper-plane"></span>
+						<h3>클라우드</h3>
+						<p>파일 저장 서비스</p>
 					</div>
 
 				</div>
 
-				<footer>
-					<a href="#" class="button">Get Started</a>
-				</footer>
+				<c:if test="${empty userInfo}">
+					<footer>
+						<a href="/view/user/loginView" class="button">Get Started</a>
+					</footer>
+				</c:if>
 			</div>
 		</section>
 

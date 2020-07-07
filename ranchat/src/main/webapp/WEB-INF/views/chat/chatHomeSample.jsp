@@ -4,15 +4,15 @@
 <html>
 <head>
 <!-- lib -->
-<link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap/bootstrap.min.css"/>
-<link rel="stylesheet" type="text/css" href="/static/lib/css/font-awesome/font-awesome.min.css"/>
-<script src="/static/lib/js/jquery/jquery-3.5.1.js"></script>
-<script src="/static/lib/js/sockjs/sockjs.js"></script>
-<script src="/static/lib/js/stomp/stomp.js"></script>
-<script src="/static/lib/js/bootstrap/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/resources/lib/css/bootstrap/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/resources/lib/css/font-awesome/font-awesome.min.css"/>
+<script src="/resources/lib/js/jquery/jquery-3.5.1.js"></script>
+<script src="/resources/lib/js/sockjs/sockjs.js"></script>
+<script src="/resources/lib/js/stomp/stomp.js"></script>
+<script src="/resources/lib/js/bootstrap/bootstrap.bundle.min.js"></script>
 
 <!-- ranChat -->
-<script src="/static/ranChat/js/chat/chat.js"></script>
+<script src="/resources/ranchat/js/chat/chat.js"></script>
 <style>
 	body {
 	  background-color: #74EBD5;

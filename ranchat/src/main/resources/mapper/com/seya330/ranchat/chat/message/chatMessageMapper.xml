@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seya330.ranchat.dao.ChatMessageDAO">
+	<insert id="insertChatRoomMessage" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO">
+		INSERT INTO CHAT_ROOM_MESSAGE(
+			MESSAGE_ID
+			, MESSAGE_CONTENTS
+			, SENDER_ID
+			, CHAT_ROOM_ID
+			, MESSAGE_STATUS
+			, REG_DATE
+		)
+		VALUES(
+			#{messageId, jdbcType=VARCHAR}
+			, #{messageContents, jdbcType=VARCHAR}
+			, #{senderId, jdbcType=VARCHAR}
+			, #{chatRoomId, jdbcType=VARCHAR}
+			, 'U'
+			, #{sendDateString, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	
+	<insert id="insertChatMessageInfoQuery" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO">
+		INSERT INTO CHAT_MESSAGE_INFO
+		(SELECT 
+		#{messageId, jdbcType=VARCHAR} MSG_ID
+		, JOINNER_ID RECEIVER_ID
+		, CASE WHEN JOINNER_ID = #{senderId, jdbcType=VARCHAR} THEN 'Y' ELSE 'N' END RECEIVER_ID
+		, NULL READ_DATE
+		, #{chatRoomId, jdbcType=VARCHAR} CHAT_ROOM_ID
+		FROM CHAT_ROOM_JOINNER WHERE CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateChatMessageInfo" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO">
+		UPDATE CHAT_MESSAGE_INFO
+		<set>
+			<if test="readYn != null ">
+				READ_YN = #{readYn, jdbcType=VARCHAR},
+				<if test='readYn.equals("Y")'>
+				READ_DATE = NOW(),
+				</if>
+			</if>
+		</set>
+		<where>
+			<if test="chatRoomId != null">
+				AND CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
+			</if>
+			<if test="receiverId != null">
+				AND RECEIVER_ID = #{receiverId, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</update>
+</mapper>

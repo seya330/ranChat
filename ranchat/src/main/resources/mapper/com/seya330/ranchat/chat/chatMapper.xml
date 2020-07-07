@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seya330.ranchat.dao.ChatDAO">
+	<select id="selectChatMessage" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO" resultType="com.seya330.ranchat.chat.vo.ChatMessageVO">
+	SELECT * FROM (
+		SELECT
+			MSG.MESSAGE_ID
+			, MSG.MESSAGE_CONTENTS
+			, MSG.SENDER_ID
+			, SENDER.USER_ID SEND_USER_ID
+			, DATE_FORMAT(MSG.REG_DATE, '%Y-%m-%d %H:%i:%S') REG_DATE
+		FROM
+			CHAT_ROOM_MESSAGE MSG
+			INNER JOIN
+			CHAT_ROOM ROOM
+			ON MSG.CHAT_ROOM_ID = ROOM.CHAT_ROOM_ID
+			INNER JOIN REG_USER SENDER
+			ON MSG.SENDER_ID = SENDER.UNIQ_ID
+		<where>
+			AND ROOM.CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
+		</where>
+			ORDER BY REG_DATE DESC
+			LIMIT 0, 5
+	) A
+	ORDER BY A.REG_DATE ASC
+	</select>
+</mapper>

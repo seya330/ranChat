@@ -6,43 +6,26 @@
 	<title>RANDOM CHAT - Sourced by seya330</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="/static/template/assets/css/main.css" />
+	
 	
 	<!-- lib -->
-	<link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrap/bootstrap.min.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/lib/css/font-awesome/font-awesome.min.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/ranchat/css/common.css"/>
-	<script src="/static/lib/js/jquery/jquery-3.5.1.js"></script>
-	<script src="/static/lib/js/sockjs/sockjs.js"></script>
-	<script src="/static/lib/js/stomp/stomp.js"></script>
-	<script src="/static/lib/js/bootstrap/bootstrap.bundle.min.js"></script>
-	<script src="/static/lib/js/mustache/mustache.js"></script>
+	<link rel="stylesheet" type="text/css" href="/resources/lib/css/bootstrap/bootstrap.min.css"/>
+	<link rel="stylesheet" href="/resources/template/assets/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="/resources/lib/css/font-awesome/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/resources/ranchat/css/common.css"/>
+	<script src="/resources/lib/js/jquery/jquery-3.5.1.js"></script>
+	<script src="/resources/lib/js/sockjs/sockjs.js"></script>
+	<script src="/resources/lib/js/stomp/stomp.js"></script>
+	<script src="/resources/lib/js/bootstrap/bootstrap.bundle.min.js"></script>
+	<script src="/resources/lib/js/mustache/mustache.js"></script>
 	
 	<!-- ranChat -->
-	<script src="/static/ranchat/js/chat.js"></script>
+	<script src="/resources/ranchat/js/chat.js"></script>
 	<style>
 		body {
-		  background-color: #74EBD5;
-	  		background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%);
-		
-		  min-height: 100vh;
+	  		background-color: #EAEAEA;
 		}
 		
-		::-webkit-scrollbar {
-		  width: 5px;
-		}
-		
-		::-webkit-scrollbar-track {
-		  width: 5px;
-		  background: #f5f5f5;
-		}
-		
-		::-webkit-scrollbar-thumb {
-		  width: 1em;
-		  background-color: #ddd;
-		  outline: 1px solid slategrey;
-		  border-radius: 1rem;
-		}
 		
 		.text-small {
 		  font-size: 0.9rem;
@@ -84,7 +67,7 @@
 	}
 	
 	@media (max-width:768px){
-		#userName{display: block;}
+		#userName{display: block; max-width: 100%;}
 	}
 	</style>
 	<script>
@@ -100,17 +83,20 @@
 	</script>
 	</head>
 	<body class="subpage">
-	<jsp:include page="/WEB-INF/views/chat/header.jsp" />
+	<%@ include file="/WEB-INF/views/chat/header.jsp"%>
 
 	<!-- Three -->
 		<section id="three" class="">
 			<div class="container py-5 px-4">
+			<div class="text-center">
+			<!-- <h1 class="display-4 text-white m-view">RanChat</h1> -->
+			</div>
 			  <!-- For demo purpose-->
-			  <header class="text-center">
-			    <h1 class="display-4 text-white">Ran Chat</h1>
-			    <p class="text-white lead mb-0">남들에게 말하기 애매한 사연을 익명으로 나누어 보세요!</p>
-			    <p class="text-white lead mb-4">from 
-			      <a href="https://seya330.github.io" class="text-white">
+			  <header class="text-center" id="ranchatHeader">
+			  <p class="lead mb-0" style="color: #6F6F6F">RANDOM CHAT</p>
+			    <p class="lead mb-0">남들에게 말하기 애매한 사연을 익명으로 나누어 보세요!</p>
+			    <p class="lead mb-4">from 
+			      <a href="https://seya330.github.io" class="">
 			        <u>seya330</u></a>
 			    </p>
 			  </header>
@@ -169,8 +155,8 @@
 	</script>
 	
 	<!-- Scripts -->
-	<script src="/static/template/assets/js/skel.min.js"></script>
-	<script src="/static/template/assets/js/util.js"></script>
-	<script src="/static/template/assets/js/main.js"></script>
+	<script src="/resources/template/assets/js/skel.min.js"></script>
+	<script src="/resources/template/assets/js/util.js"></script>
+	<script src="/resources/template/assets/js/main.js"></script>
 	</body>
 </html>
