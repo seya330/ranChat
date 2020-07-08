@@ -30,7 +30,10 @@ public class DatabaseConfiguration {
 		HikariConfig conf = new HikariConfig();
 		//conf.setDriverClassName("org.mariadb.jdbc.Driver");
 		conf.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
-		conf.setJdbcUrl("jdbc:log4jdbc:mariadb://ec2-13-125-149-76.ap-northeast-2.compute.amazonaws.com:3306/ranchat?characterEncoding=utf8");
+		//개발
+		conf.setJdbcUrl("jdbc:log4jdbc:mysql://ec2-13-125-149-76.ap-northeast-2.compute.amazonaws.com:3306/ranchat?characterEncoding=utf8");
+		//운영
+		//conf.setJdbcUrl("jdbc:log4jdbc:mysql://localhost:3306/ranchat?characterEncoding=utf8");
 		conf.setUsername("ranchat");
 		conf.setPassword("R@nchat");
 		return new HikariDataSource(conf);
