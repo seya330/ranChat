@@ -37,7 +37,7 @@ import com.seya330.ranchat.user.vo.UserResult;
 @Service
 public class ChatService {
 	private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
-	private Map<ChatUserBean, DeferredResult<ChatResponse>> waitingUsers;
+	private Map<String, DeferredResult<ChatResponse>> waitingUsers;
 	private ReentrantReadWriteLock lock;
 	private Map<String, Map> connectedUsers;
 	
@@ -60,15 +60,15 @@ public class ChatService {
 	
 	//비동기 작동 할 수 있도록 구현
 	@Async("asyncThreadPool")
-    public void joinChatRoom(ChatUserBean user, DeferredResult<ChatResponse> deferredResult) {
+    public void joinChatRoom(String userSessionId, DeferredResult<ChatResponse> deferredResult) {
         logger.info("## Join chat room request. {}[{}]", Thread.currentThread().getName(), Thread.currentThread().getId());
-        if (user == null || deferredResult == null) {
+        if (userSessionId == null || deferredResult == null) {
             return;
         }
 
         try {
         	lock.writeLock().lock();
-        	waitingUsers.put(user, deferredResult);
+        	waitingUsers.put(userSessionId, deferredResult);
         }finally {
         	lock.writeLock().unlock();
         	establishChatRoomToRandom();
@@ -86,17 +86,17 @@ public class ChatService {
                 return;
             }
 
-            Iterator<ChatUserBean> itr = waitingUsers.keySet().iterator();
-            ChatUserBean user1 = itr.next();
-            ChatUserBean user2 = itr.next();
+            Iterator<String> itr = waitingUsers.keySet().iterator();
+            String user1 = itr.next();
+            String user2 = itr.next();
 
             String uuid = UUID.randomUUID().toString();
 
             DeferredResult<ChatResponse> user1Result = waitingUsers.remove(user1);
             DeferredResult<ChatResponse> user2Result = waitingUsers.remove(user2);
 
-            user1Result.setResult(new ChatResponse(ResponseResult.SUCCESS, uuid, user1.getSessionId()));
-            user2Result.setResult(new ChatResponse(ResponseResult.SUCCESS, uuid, user2.getSessionId()));
+            user1Result.setResult(new ChatResponse(ResponseResult.SUCCESS, uuid, user1));
+            user2Result.setResult(new ChatResponse(ResponseResult.SUCCESS, uuid, user2));
         } catch (Exception e) {
             logger.warn("Exception occur while checking waiting users", e);
         } finally {
@@ -119,6 +119,7 @@ public class ChatService {
     
     public void disconnectUser(String websocketSessionId) {
     	Map resultMap = connectedUsers.remove(websocketSessionId);
+    	waitingUsers.remove(websocketSessionId);
     	ChatMessageVO chatMessage = new ChatMessageVO();
     	
     	chatMessage.setMessageType(MessageType.DISCONNECTED);

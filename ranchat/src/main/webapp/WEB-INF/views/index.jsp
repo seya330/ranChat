@@ -21,6 +21,10 @@
 		$("#randomChatArea").on("click", function(){
 			location.href="/randomChat";
 		});
+		
+		$("#groupChatArea").on("click", function(){
+			location.href="/view/chat/groupChat";
+		});
 	});
 	</script>
 </head>
@@ -42,7 +46,7 @@
 						<p>익명의 상대와 1대1 채팅</p>
 					</div>
 
-					<div>
+					<div id="groupChatArea" style="cursor: pointer;">
 						<span class="icon fa-laptop"></span>
 						<h3>단체 채팅</h3>
 						<p>친구들과 단체 채팅</p>

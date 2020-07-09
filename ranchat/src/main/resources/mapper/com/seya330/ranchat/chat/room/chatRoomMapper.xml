@@ -44,6 +44,9 @@
 			<if test="regUserBean.uniqId != null">
 			AND JOINNER.JOINNER_ID = #{regUserBean.uniqId, jdbcType=VARCHAR}
 			</if>
+			<if test="chatRoomId != null">
+			AND ROOM.CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
+			</if>
 			</where>
 	</select>
 	

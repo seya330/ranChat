@@ -41,6 +41,7 @@
 		p{
 			margin: 0;
 			text-decoration: none;
+			word-break: break-all;
 		}
 		.h5{
 			font-size: 1rem ;
@@ -87,10 +88,13 @@
 			text-align: center;
 		}
 		.act{
-			background-color: #CFFF24;
+			background-color: #E4F7BA;
 		}
 		.list-group-item-light.list-group-item-action.act:hover{
-			background-color: #CFFF24;
+			background-color: #E4F7BA;
+		}
+		.bg-primary{
+			background-color: #6cc091 !important;
 		}
 	</style>
 	
@@ -216,7 +220,7 @@
                    <h6 class="mb-0">{{joinnerNameCutDown}}</h6><small class="small font-weight-bold">14 Dec</small>
                </div>
 				<div class="row">
-            	<p class="font-italic mb-0 text-small col-11">{{summaryCutDown}}</p>
+            	<p id="summary_{{chatRoomId}}" class="font-italic mb-0 text-small col-11">{{summaryCutDown}}</p>
 				<span id="unreadCnt_{{chatRoomId}}" class="col-1" style="text-align: center; font-size: 0.9rem; color: white; background-color: #FF9595; border-radius: 8px; padding: 1px 10px 1px 10px; {{^isUnreadCnt}}display: none;{{/isUnreadCnt}}">{{unreadCnt}}</span>
 				</div>
         	</div>

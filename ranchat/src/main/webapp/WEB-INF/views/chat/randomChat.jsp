@@ -56,6 +56,9 @@
 		animation: rotate-s-loader 1s linear infinite;
 		margin: 6rem auto;
 	}
+	.bg-primary{
+			background-color: #6cc091 !important;
+	}
 	
 	@keyframes rotate-s-loader {
 	  from {

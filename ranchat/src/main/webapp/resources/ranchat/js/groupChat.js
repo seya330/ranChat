@@ -27,7 +27,7 @@ function init(){
 
 function getMyChatRoomList(){
 	$.ajax({
-		url					: "/chat/groupChat/myChatRoomList",
+		url					: "/chat/groupChat/chatRoomList",
 		method				: "get",
 		contentType			: "application/json; charset=utf-8",
 		headers				: {"auth-token":getCookie("auth-token")},
@@ -94,13 +94,12 @@ function createToken(){
 function wsConnect(){
 	var socket = new SockJS("/endPoint");
 	stompClient = Stomp.over(socket);
-	stompClient.connect({chatType: "GROUPCHAT"}, function(frame){
+	stompClient.connect({chatType: "GROUPCHAT", "auth-token": getCookie("auth-token")}, function(frame){
 		baseSubscribe();
 	});
 }
 
 function baseSubscribe(){
-	console.log("subscribe : /sub/public." + getCookie("uniqId") + ".message");
 	stompClient.subscribe("/sub/public." + getCookie("uniqId") + ".message", function(result){
 		publicMessageHandler(result);
 	});
@@ -132,12 +131,14 @@ function addInvitingUser(){
 function publicMessageHandler(result){
 	var chatMessage = JSON.parse(result.body);
 	
-	appendingProcess(chatMessage);
+	chatMessage = appendingProcess(chatMessage);
 	
 	if(viewingRoomId == chatMessage.chatRoomId)
 		viewingChatroomMessageHandler(chatMessage);
 	else
 		notViewingChatroomMessageHandler(chatMessage);
+	
+	chatRoomRefresh(chatMessage);
 }
 
 function viewChatRoom(chatRoomId){
@@ -202,6 +203,20 @@ function viewingChatroomMessageHandler(chatMessage){
 	param.list = chatMessage;
 	$("#chatBoxContents").append(Mustache.render($("#msgTemplate").html(), param));
 	chatBoxScrollToBottom();
+	
+	$.ajax({
+		url					: "/chat/groupChat/message/view",
+		method				: "get",
+		contentType			: "application/json; charset=utf-8",
+		headers				: {"auth-token":getCookie("auth-token")},
+		data				: {
+			"chatRoomId"	: chatMessage.chatRoomId,
+			"readYn"		: "Y"
+			},
+		//dataType			: "json",
+		beforeSend			: function(){},
+		success				: function(){}
+	});
 }
 
 function notViewingChatroomMessageHandler(chatMessage){
@@ -210,16 +225,35 @@ function notViewingChatroomMessageHandler(chatMessage){
 }
 
 function appendingProcess(chatMessage){
-	$.extend(chatMessage, {isSender: function(){
-		if(this.senderId == getCookie("uniqId"))
-			return true;
-		else
-			return false;
-	}});
+	$.extend(chatMessage, {
+		isSender: function(){
+			if(this.senderId == getCookie("uniqId"))
+				return true;
+			else
+				return false;
+		},
+		summaryCutDown: function(){
+			if(!this.messageContents)
+				return "채팅 메세지가 없습니다.";
+			
+			return this.messageContents.substring(0, 30);
+		}
+	});
+	return chatMessage;
 }
 
 function chatBoxScrollToBottom(){
-	$("#chatBox").scrollTop($("#chatBox").height());
+	$("#chatBox").scrollTop($("#chatBoxContents").height());
+}
+
+function chatRoomRefresh(chatMessage){	
+	//해당 chatRoomId의 summary 가 존재할 경우.
+	if($("#summary_" + chatMessage.chatRoomId).length > 0){
+		$("#summary_" + chatMessage.chatRoomId).html(chatMessage.summaryCutDown());
+	}else{
+	//존재하지 않을 경우
+		getMyChatRoomList();
+	}
 }
 /*(function(a){
 	a.x = 1;

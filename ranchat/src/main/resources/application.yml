@@ -14,3 +14,11 @@ spring:
   resources: 
     static-locations: classpath:/static/
     add-mappings: true
+    
+    
+#redis
+redis: 
+#  host: ec2-13-125-149-76.ap-northeast-2.compute.amazonaws.com
+  host: localhost
+  port: 6379
+  password: redis

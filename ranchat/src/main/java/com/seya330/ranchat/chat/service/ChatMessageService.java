@@ -56,4 +56,8 @@ public class ChatMessageService {
 		chatMessageDAO.insertChatRoomMessage(chatMessageVO);
 		chatMessageDAO.insertChatMessageInfoQuery(chatMessageVO);
 	}
+	
+	public void readChatMessage(ChatMessageVO chatMessageVO) {
+		chatMessageDAO.updateChatMessageInfo(chatMessageVO);
+	}
 }

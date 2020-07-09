@@ -42,6 +42,9 @@ import com.seya330.ranchat.user.util.UserUtil;
 import com.seya330.ranchat.user.vo.RegUserVO;
 import com.seya330.ranchat.util.ServletUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/chat")
 public class ChatController {
@@ -95,16 +98,15 @@ public class ChatController {
 	@GetMapping("/join")
 	public DeferredResult<ChatResponse> joinRequest(ChatUserBean chatUserBean){
 		String sessionId = ServletUtil.getSession().getId();
-		final ChatUserBean user = new ChatUserBean(sessionId);
 		logger.info("join request. session id : {}, join user name : {}", sessionId, chatUserBean.getUserName());
 		
 		final DeferredResult<ChatResponse> deferredResult = new DeferredResult<>(null);
-		chatService.joinChatRoom(user, deferredResult);
+		chatService.joinChatRoom(sessionId, deferredResult);
 		return deferredResult;
 	}
 	
-	@GetMapping("/groupChat/myChatRoomList")
-	public Object myChatRoomList() {
+	@GetMapping("/groupChat/chatRoomList")
+	public Object chatRoomList() {
 		//토큰 가지고 와서 chatRoomVO 에 regUserBean 에 셋팅 해주고 해야함
 		ChatRoomVO chatRoomVO = new ChatRoomVO();
 		chatRoomVO.setRegUserBean(UserUtil.getUserInSession());
@@ -116,5 +118,12 @@ public class ChatController {
 		RegUserBean user = UserUtil.getUserInSession();
 		chatMessageVO.setReceiverId(user.getUniqId());
 		return ResponseEntity.status(HttpStatus.OK).body(chatMessageService.getChatMessageList(chatMessageVO));
+	}
+	
+	@GetMapping("/groupChat/message/view")
+	public Object messageView(ChatMessageVO chatMessageVO) {
+		chatMessageVO.setReceiverId(UserUtil.getUserInSession().getUniqId());
+		chatMessageService.readChatMessage(chatMessageVO);
+		return ResponseEntity.status(HttpStatus.OK).body("");
 	}
 }
