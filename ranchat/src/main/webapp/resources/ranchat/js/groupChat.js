@@ -121,6 +121,11 @@ function addInvitingUser(){
 				$("#invitingUserId").focus();
 				return;
 			}
+			if(groupChatVO.result == "SAME_USER_ID"){
+				alert("자신은 초대할 수 없습니다.");
+				$("#invitingUserId").focus();
+				return;
+			}
 			
 			getMyChatRoomList();
 			$("#inviteDialog").dialog("close");

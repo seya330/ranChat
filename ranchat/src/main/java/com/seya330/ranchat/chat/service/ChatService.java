@@ -137,6 +137,11 @@ public class ChatService {
     		return result;
     	}
     	
+    	if(userBean.getUniqId().equals(UserUtil.getUserInSession().getUniqId())) {
+    		result.setResult(GroupChatResult.SAME_USER_ID);
+    		return result;
+    	}
+    	
     	//채팅방 신규 생성
     	ChatRoomVO room = new ChatRoomVO();
     	room.initRoom();
