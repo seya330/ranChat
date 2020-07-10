@@ -12,7 +12,7 @@
 		)
 		VALUES(
 			#{uniqId, jdbcType=VARCHAR}
-			, #{userId, jdbcType=VARCHAR}
+			, LOWER(#{userId, jdbcType=VARCHAR})
 			, #{password, jdbcType=VARCHAR}
 			, NOW()
 			, NOW()

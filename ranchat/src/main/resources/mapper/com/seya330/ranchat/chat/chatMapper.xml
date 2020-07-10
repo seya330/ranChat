@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.seya330.ranchat.dao.ChatDAO">
+	<select id="selectChatMessageCnt" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO" resultType="int">
+		SELECT
+			COUNT(*) CNT
+		FROM
+			CHAT_ROOM_MESSAGE MSG
+			INNER JOIN
+			CHAT_ROOM ROOM
+			ON MSG.CHAT_ROOM_ID = ROOM.CHAT_ROOM_ID
+			INNER JOIN REG_USER SENDER
+			ON MSG.SENDER_ID = SENDER.UNIQ_ID
+		<where>
+			AND ROOM.CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
+		</where>
+	</select>
+
 	<select id="selectChatMessage" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO" resultType="com.seya330.ranchat.chat.vo.ChatMessageVO">
 	SELECT * FROM (
 		SELECT
@@ -19,9 +34,9 @@
 		<where>
 			AND ROOM.CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
 		</where>
-			ORDER BY REG_DATE DESC
-			LIMIT 0, 5
+			ORDER BY REG_DATE ASC
+			LIMIT #{pagingVO.startIdx}, #{pagingVO.blockSize}
 	) A
-	ORDER BY A.REG_DATE ASC
+	ORDER BY A.REG_DATE
 	</select>
 </mapper>

@@ -17,7 +17,6 @@ $.fn.serializeObject = function()
 };
 
 function getCookie(cookieName){
-	console.log(document.cookie);
 	var cookieArr = document.cookie.split(";");
 	for(var i=0; i<cookieArr.length; i++){
 		var name = cookieArr[i].substr(0, cookieArr[i].indexOf("=")).replace(/^\s+|\s+$/g, "");

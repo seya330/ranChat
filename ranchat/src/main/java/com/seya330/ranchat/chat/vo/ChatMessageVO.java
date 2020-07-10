@@ -1,9 +1,11 @@
 package com.seya330.ranchat.chat.vo;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.seya330.ranchat.chat.bean.ChatUserBean;
+import com.seya330.ranchat.common.vo.PagingVO;
 import com.seya330.ranchat.user.vo.RegUserVO;
 
 import lombok.Getter;
@@ -30,6 +32,10 @@ public class ChatMessageVO {
     private String receiverId;
     
     private RegUserVO sender;
+    
+    private ArrayList<ChatMessageVO> messageList;
+    
+    private PagingVO pagingVO;
     public String toString() {
     	return "ChatMessage{" + "senderSessionId='" + senderSessionId + '\'' + ", message='" + message + '\'' + ", messageType=" + messageType + '}';
     }
@@ -44,5 +50,12 @@ public class ChatMessageVO {
     public String getSendDateString() {
     	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	return format.format(getSendDate());
+    }
+    
+    public PagingVO getPagingVO() {
+    	if(this.pagingVO == null)
+    		pagingVO = new PagingVO();
+    	
+    	return pagingVO;
     }
 }

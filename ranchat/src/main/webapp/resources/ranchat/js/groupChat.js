@@ -1,5 +1,7 @@
 var stompClient
 var viewingRoomId;
+var viewingPageNo = 1;
+var maxPageNo;
 
 function init(){
 	createToken();
@@ -23,6 +25,7 @@ function init(){
 	$("#inviteDialogBtn").on("click", function(){$("#inviteDialog").dialog("open")});
 	$("#inviteBtn").on("click", function(e){e.preventDefault();addInvitingUser();});
 	$("#sendChatBtn").on("click", function(e){e.preventDefault();sendChat();});
+	$("#chatBox").on("scroll", function(e){chatBoxScrollTop();});
 }
 
 function getMyChatRoomList(){
@@ -82,10 +85,8 @@ function createToken(){
 		dataType		: "json",
 		async			: false,
 		success			: function(result){
-			console.log(result.uniqId);
 			setCookie("auth-token", result.token);
 			setCookie("uniqId", result.uniqId);
-			console.log(getCookie("uniqId"));
 		},
 		fail			: function(){}
 	});
@@ -147,26 +148,51 @@ function publicMessageHandler(result){
 }
 
 function viewChatRoom(chatRoomId){
+	$("#chatBox").off("scroll");
 	$("#chatBoxContents").html("");
 	$("#chatroom_" + viewingRoomId).removeClass("act");
 	$("#chatroom_" + chatRoomId).addClass("act");
 	viewingRoomId = chatRoomId;
-	drawChatList(chatRoomId);
+	viewingPageNo = 1;
+	maxPageNo = undefined;
+	var chatMessageVO = {
+		"chatRoomId"	: chatRoomId,
+		"readYn"		: "Y",
+		"pagingVO.orderBy"		: "ASC"
+		}
+	drawChatList(chatMessageVO);
+	
+	//첫 페이징 불러온 데이터가 메시지박스 띄우는 창보다 작을 경우 한페이징 더불러옴.
+	if($("#chatBox").height() > $("#chatBoxContents").height()){
+		if(viewingPageNo + 1 > maxPageNo){
+			return;
+		}
+		viewingPageNo++;
+		
+		var chatMessageVO = {
+			"chatRoomId"			: viewingRoomId,
+			"readYn"				: "Y",
+			"pagingVO.maxPageNo"	: maxPageNo,
+			"pagingVO.pageNo"		: viewingPageNo,
+			"pagingVO.orderBy"		: "DESC"
+		}
+		drawChatList(chatMessageVO);
+	}
+	$("#chatBox").on("scroll", function(e){chatBoxScrollTop();});
 }
 
-function drawChatList(chatRoomId){
+function drawChatList(chatMessageVO){
 	$.ajax({
 		url					: "/chat/groupChat/chatList",
 		method				: "get",
 		contentType			: "application/json; charset=utf-8",
 		headers				: {"auth-token":getCookie("auth-token")},
-		data				: {
-			"chatRoomId"	: chatRoomId,
-			"readYn"		: "Y"
-			},
+		data				: chatMessageVO,
 		dataType			: "json",
 		beforeSend			: function(){},
-		success				: function(messageList){
+		async				: false,
+		success				: function(chatMessageVO){
+			var messageList = chatMessageVO.messageList;
 			if(!messageList || messageList.length < 1){
 				$("#chatBoxContents").html("아무것도엄슴~");
 			}
@@ -180,9 +206,22 @@ function drawChatList(chatRoomId){
 			}
 			
 			var param = {"list":messageList};
-			$("#chatBoxContents").append(Mustache.render($("#msgTemplate").html(), param));
-			$("#unreadCnt_" + chatRoomId).html("0").hide();
-			chatBoxScrollToBottom();
+			if(chatMessageVO.pagingVO.orderBy == "ASC"){
+				$("#chatBoxContents").append(Mustache.render($("#msgTemplate").html(), param));
+				chatBoxScrollToBottom();
+			}
+			else{
+				var height = $("#chatBoxContents").height();
+				$("#chatBoxContents").prepend(Mustache.render($("#msgTemplate").html(), param));
+				var height2 = $("#chatBoxContents").height();
+				$("#chatBox").scrollTop(height2-height);
+			}
+				
+			$("#unreadCnt_" + chatMessageVO.chatRoomId).html("0").hide();
+			
+			if(!maxPageNo){
+				maxPageNo = parseInt(chatMessageVO.pagingVO.maxPageNo);
+			}
 		}
 	});
 }
@@ -258,6 +297,26 @@ function chatRoomRefresh(chatMessage){
 	}else{
 	//존재하지 않을 경우
 		getMyChatRoomList();
+	}
+}
+
+function chatBoxScrollTop(){
+	if($("#chatBox").scrollTop() == 0){
+		if(viewingPageNo + 1 > maxPageNo){
+			alert("가장 첫 메세지 입니다.");
+			return;
+		}
+			
+		viewingPageNo++;
+		
+		var chatMessageVO = {
+			"chatRoomId"			: viewingRoomId,
+			"readYn"				: "Y",
+			"pagingVO.maxPageNo"	: maxPageNo,
+			"pagingVO.pageNo"		: viewingPageNo,
+			"pagingVO.orderBy"		: "DESC"
+		}
+		drawChatList(chatMessageVO);
 	}
 }
 /*(function(a){

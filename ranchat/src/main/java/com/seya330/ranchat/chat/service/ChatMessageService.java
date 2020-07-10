@@ -34,6 +34,10 @@ public class ChatMessageService {
 	
 	public ArrayList<ChatMessageVO> getChatMessageList(ChatMessageVO chatMessageVO){
 		chatMessageDAO.updateChatMessageInfo(chatMessageVO);
+		chatMessageVO.getPagingVO().setTotalCnt(chatDAO.selectChatMessageCnt(chatMessageVO));
+		if(chatMessageVO.getPagingVO().getTotalCnt() == 0)
+			return new ArrayList<ChatMessageVO>();
+		
 		return chatDAO.selectChatMessage(chatMessageVO);
 	}
 	

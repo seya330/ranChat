@@ -36,6 +36,7 @@ function joinRoom(){
 }
 function setConnecting(isConnecting){
 	if(isConnecting){
+		$("#chatBoxContents").html("");
 		$("#connectBtn").attr("disabled", true);
 		$("#disConnectBtn").attr("disabled", false);
 		$("#name").attr("disabled", true);

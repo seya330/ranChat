@@ -117,7 +117,8 @@ public class ChatController {
 	public Object chatList(ChatMessageVO chatMessageVO) {
 		RegUserBean user = UserUtil.getUserInSession();
 		chatMessageVO.setReceiverId(user.getUniqId());
-		return ResponseEntity.status(HttpStatus.OK).body(chatMessageService.getChatMessageList(chatMessageVO));
+		chatMessageVO.setMessageList(chatMessageService.getChatMessageList(chatMessageVO));
+		return ResponseEntity.status(HttpStatus.OK).body(chatMessageVO);
 	}
 	
 	@GetMapping("/groupChat/message/view")

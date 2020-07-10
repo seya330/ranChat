@@ -21,4 +21,7 @@ public class ChatDAO {
 		return (ArrayList)sqlSession.selectList(namespace + "selectChatMessage", chatMessageVO);
 	}
 	
+	public int selectChatMessageCnt(ChatMessageVO chatMessageVO) {
+		return sqlSession.selectOne(namespace + "selectChatMessageCnt", chatMessageVO);
+	}
 }

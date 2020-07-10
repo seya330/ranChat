@@ -14,7 +14,6 @@
 	<script src="/resources/template/assets/js/jquery.min.js"></script>
 	<script src="/resources/template/assets/js/skel.min.js"></script>
 	<script src="/resources/template/assets/js/util.js"></script>
-	<script src="/resources/template/assets/js/main.js"></script>
 	<script src="/resources/user/loginView.js"></script>
 	<script src="/resources/common/common.js"></script>
 	<script src="/resources/lib/js/mustache/mustache.js"></script>
