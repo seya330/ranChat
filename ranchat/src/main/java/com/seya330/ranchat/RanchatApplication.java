@@ -1,7 +1,7 @@
 /**
  * develop
  * */
-package com.seya330.ranchat;
+/*package com.seya330.ranchat;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,7 +10,7 @@ public class RanchatApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RanchatApplication.class, args);
 	}
-} 
+}*/
 
 
 
@@ -18,7 +18,7 @@ public class RanchatApplication {
 /**
  * operation
  * */
-/*
+
 package com.seya330.ranchat;
   
 import org.springframework.boot.SpringApplication;
@@ -37,4 +37,3 @@ public class RanchatApplication extends SpringBootServletInitializer{
 	public static void main(String[] args) {
 	SpringApplication.run(RanchatApplication.class, args); }
 }
- */
