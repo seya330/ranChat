@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.seya330.ranchat.chat.interfaces.ChatRoom;
-import com.seya330.ranchat.user.bean.RegUserBean;
+import com.seya330.ranchat.user.vo.RegUserVO;
 import com.seya330.ranchat.util.IDGeneratorUtil;
 
 import lombok.Getter;
@@ -16,13 +16,14 @@ public class ChatRoomVO implements ChatRoom{
 	private String chatRoomId;
 	private String chatRoomName;
 	private String summary;
-	private RegUserBean regUserBean;
-	private Map<String, RegUserBean> joinUserMap;
+	private RegUserVO regUserVO;
+	private Map<String, RegUserVO> joinUserMap;
 	private ArrayList<ChatRoomJoinnerVO> joinnerList;
 	private int unreadCnt;
+	private String[] inviteUniqIdList;
 	
 	public ChatRoomVO() {
-		joinUserMap = new LinkedHashMap<String, RegUserBean>();
+		joinUserMap = new LinkedHashMap<String, RegUserVO>();
 	}
 	
 	@Override
@@ -30,7 +31,7 @@ public class ChatRoomVO implements ChatRoom{
 		chatRoomId = IDGeneratorUtil.generateId("R", 19);
 	}
 	
-	public void addJoinUser(RegUserBean userBean) {
+	public void addJoinUser(RegUserVO userBean) {
 		joinUserMap.put(userBean.getUniqId(), userBean);
 	}
 	

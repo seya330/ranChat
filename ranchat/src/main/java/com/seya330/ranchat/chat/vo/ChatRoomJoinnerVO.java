@@ -2,7 +2,6 @@ package com.seya330.ranchat.chat.vo;
 
 import java.sql.Date;
 
-import com.seya330.ranchat.user.bean.RegUserBean;
 import com.seya330.ranchat.user.vo.RegUserVO;
 
 import lombok.Getter;
@@ -20,7 +19,7 @@ public class ChatRoomJoinnerVO extends RegUserVO{
 		
 	}
 	
-	public ChatRoomJoinnerVO(ChatRoomVO chatRoom, RegUserBean userBean) {
+	public ChatRoomJoinnerVO(ChatRoomVO chatRoom, RegUserVO userBean) {
 		this.chatRoomId = chatRoom.getChatRoomId();
 		this.joinnerId = userBean.getUniqId();
 	}

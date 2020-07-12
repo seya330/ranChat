@@ -10,7 +10,7 @@ function init(){
 	$("#inviteDialog").dialog({
 		dialogClass: "",
 	      autoOpen: false,
-	      width: 350,
+	      width: 750,
 	      modal: true,
 	      closeOnEscape: false,
 	      show: "fade",
@@ -23,7 +23,7 @@ function init(){
 	    });
 	
 	$("#inviteDialogBtn").on("click", function(){$("#inviteDialog").dialog("open")});
-	$("#inviteBtn").on("click", function(e){e.preventDefault();addInvitingUser();});
+	$("#inviteBtn").on("click", function(e){e.preventDefault();searchInvitingUser();});
 	$("#sendChatBtn").on("click", function(e){e.preventDefault();sendChat();});
 	$("#chatBox").on("scroll", function(e){chatBoxScrollTop();});
 }
@@ -106,17 +106,44 @@ function baseSubscribe(){
 	});
 }
 
-
-function addInvitingUser(){
+function searchInvitingUser(){
 	var userId = $("#invitingUserId").val();
 	$.ajax({
-		url: 		"/chat/invite/" + userId,
-		method:		"post",
-		contentType: "application/json; charset=utf-8",
-		headers: 	{"auth-token":getCookie("auth-token")},
-		data: 		"",
-		beforeSend: function(){},
-		success:	function(groupChatVO){
+		url				: "/user/search",
+		method			: "get",
+		contentType		: "application/json; charset=utf-8",
+		headers			: {"auth-token":getCookie("auth-token")},
+		data			: {"searchVO.userId": userId},
+		beforeSend		: function(){},
+		success			: function(regUserList){
+			$("#invSearchUserTable").html("");
+			var param = {
+				"regUserList": regUserList
+			}
+			$("#invSearchUserTable").append(Mustache.render($("#regUserListTemplate").html(), param));
+			$("#invSearchUserTable button").on("click", function(){addInviteUser(this);});
+			
+			var selectedIdArr = getSelectedUniqIdList();
+			for(var i=0; i<selectedIdArr.length; i++){
+				setSelectedSrchRow(selectedIdArr[i], true);
+			}
+		}
+	});
+}
+
+function addInvitingUser(){
+	var uniqIdList = getSelectedUniqIdList();
+	var obj = {
+		inviteUniqIdList: uniqIdList
+	}
+	$.ajax({
+		url				: "/chat/invite",
+		method			: "post",
+		contentType		: "application/json; charset=utf-8",
+		headers			: {"auth-token":getCookie("auth-token")},
+		data			: JSON.stringify(obj),
+		beforeSend		: function(){},
+		success			: function(groupChatVO){
 			if(groupChatVO.result == "INVALID_USER"){
 				alert("유효하지 않은 사용자 ID 입니다.");
 				$("#invitingUserId").focus();
@@ -317,6 +344,49 @@ function chatBoxScrollTop(){
 			"pagingVO.orderBy"		: "DESC"
 		}
 		drawChatList(chatMessageVO);
+	}
+}
+
+function addInviteUser(elem){
+	var selectedTr = $(elem).closest("tr");
+	var selectedObj = {
+		"uniqId": selectedTr.data("uniqId"),
+		"userId": selectedTr.data("userId")
+	}
+	
+	$("#invSelectedUserTable").append(Mustache.render($("#selectedUserTemplate").html(), selectedObj));
+	//취소버튼 눌렀을때 작업 바인딩
+	$("#invSelectedUserTable button").on("click", function(){
+		cancelInvitingUser(this);
+	});
+
+	setSelectedSrchRow(selectedTr.data("uniqId"), true);
+}
+
+function cancelInvitingUser(elem){
+	var selectElem = $(elem).closest("tr");
+	var uniqId = selectElem.data("uniqId");
+	
+	setSelectedSrchRow(uniqId, false);
+	selectElem.remove();
+}
+
+function getSelectedUniqIdList(){
+	var arr = [];
+	$.each($("#invSelectedUserTable tr"), function(i, e){
+		arr.push($(e).data("uniqId"));
+	});
+	return arr;
+}
+
+function setSelectedSrchRow(uniqId, isSelect){
+	var row = $("#invSearchUserTable tr[data-uniq-id='"+ uniqId +"']");
+	if(isSelect == true){
+		row.addClass("selected");
+		row.find("button").attr("disabled", true);
+	}else{
+		row.removeClass("selected");
+		row.find("button").attr("disabled", false);
 	}
 }
 /*(function(a){

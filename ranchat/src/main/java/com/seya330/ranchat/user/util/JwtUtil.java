@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.seya330.ranchat.user.bean.RegUserBean;
 import com.seya330.ranchat.user.vo.RegUserVO;
 
 import io.jsonwebtoken.Claims;
@@ -44,7 +43,7 @@ public class JwtUtil {
 	}
 	
 	
-	public String userBeanToJwtToken(RegUserBean userBean) {
+	public String userBeanToJwtToken(RegUserVO userBean) {
 		HashMap<String, Object> claims = new HashMap<String, Object>();
 		claims.put("uniqId", userBean.getUniqId());
 		claims.put("userId", userBean.getUserId());

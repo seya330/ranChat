@@ -14,13 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import com.seya330.ranchat.chat.bean.RandomChatRoomBean;
 import com.seya330.ranchat.chat.dao.ChatRoomDAO;
-import com.seya330.ranchat.chat.bean.ChatRoomBean;
-import com.seya330.ranchat.chat.bean.ChatUserBean;
-import com.seya330.ranchat.chat.interfaces.ChatRoom;
 import com.seya330.ranchat.chat.vo.ChatMessageVO;
 import com.seya330.ranchat.chat.vo.ChatResponse;
 import com.seya330.ranchat.chat.vo.ChatRoomJoinnerVO;
@@ -29,10 +26,9 @@ import com.seya330.ranchat.chat.vo.ChatResponse.ResponseResult;
 import com.seya330.ranchat.chat.vo.ChatRoomVO;
 import com.seya330.ranchat.chat.vo.GroupChatResult;
 import com.seya330.ranchat.chat.vo.GroupChatVO;
-import com.seya330.ranchat.user.bean.RegUserBean;
 import com.seya330.ranchat.user.service.UserService;
 import com.seya330.ranchat.user.util.UserUtil;
-import com.seya330.ranchat.user.vo.UserResult;
+import com.seya330.ranchat.user.vo.RegUserVO;
 
 @Service
 public class ChatService {
@@ -127,34 +123,45 @@ public class ChatService {
     }
     
     //유저정보 가지고 옴 > 유저가 없으면 잘못된 id! > 유저가 있으면 방 id값이 있는지 확인> 방이 이미 존재하는 방이면 이미 그 방에 초대되어 있는지 확인 >방이 이미 존재하지 않으면 신규 생성 > 초대 안되어 있으면 초대 > 초대 되어 있으면 이미초대됨!
-    public GroupChatVO inviteUser(String userId) {
+    @Transactional
+    public GroupChatVO inviteUser(ChatRoomVO chatRoomVO) {
     	GroupChatVO result = new GroupChatVO();
+    	if(chatRoomVO.getInviteUniqIdList() == null || chatRoomVO.getInviteUniqIdList().length == 0) {
+    		result.setResult(GroupChatResult.EMPTY);
+    		return result;
+    	}
+    	
     	result.setResult(GroupChatResult.SUCCESS);
-    	
-    	RegUserBean userBean = userService.getUserByUserId(userId);
-    	if(userBean == null) {
-    		result.setResult(GroupChatResult.INVALID_USER_ID);
-    		return result;
-    	}
-    	
-    	if(userBean.getUniqId().equals(UserUtil.getUserInSession().getUniqId())) {
-    		result.setResult(GroupChatResult.SAME_USER_ID);
-    		return result;
-    	}
     	
     	//채팅방 신규 생성
     	ChatRoomVO room = new ChatRoomVO();
     	room.initRoom();
     	chatRoomDAO.insertChatRoom(room);
     	
+    	//자신을 채팅방 접속자에 추가
     	ChatRoomJoinnerVO joinner = new ChatRoomJoinnerVO(room, UserUtil.getUserInSession());
-    	ChatRoomJoinnerVO joinner2 = new ChatRoomJoinnerVO(room, userBean);
-    	
     	chatRoomDAO.insertChatRoomJoinner(joinner);
-    	chatRoomDAO.insertChatRoomJoinner(joinner2);
-    	
     	room.addJoinUser(UserUtil.getUserInSession());
-    	room.addJoinUser(userBean);
+    	
+    	//자신 외 사용자들 추가
+    	for(String uniqId : chatRoomVO.getInviteUniqIdList()) {
+    		RegUserVO param = new RegUserVO();
+    		param.setUniqId(uniqId);
+    		RegUserVO userVO = userService.getUserOne(param);
+    		if(userVO == null) {
+    			result.setResult(GroupChatResult.INVALID_USER_ID);
+    			return result;
+    		}
+    		
+    		if(userVO.getUniqId().equals(UserUtil.getUserInSession().getUniqId())) {
+        		result.setResult(GroupChatResult.SAME_USER_ID);
+        		return result;
+        	}
+    		
+    		ChatRoomJoinnerVO joinner2 = new ChatRoomJoinnerVO(room, userVO);
+        	chatRoomDAO.insertChatRoomJoinner(joinner2);
+        	room.addJoinUser(userVO);
+    	}
     	
     	result.setChatRoomVO(room);
     	return result;

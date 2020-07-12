@@ -39,14 +39,14 @@ function setConnecting(isConnecting){
 		$("#chatBoxContents").html("");
 		$("#connectBtn").attr("disabled", true);
 		$("#disConnectBtn").attr("disabled", false);
-		$("#name").attr("disabled", true);
+		$("#userName").attr("disabled", true);
 		
 		$("#loadingCircle").show();
 		//접속중입니다 메세지 출력도 하면 좋음.
 	}else{
 		$("#connectBtn").attr("disabled", false);
 		$("#disConnectBtn").attr("disabled", true);
-		$("#name").attr("disabled", false);
+		$("#userName").attr("disabled", false);
 		//접속중입니다 메세지 없애야함.
 	}
 }
@@ -55,14 +55,14 @@ function setConnected(isConnect){
 		$("#loadingCircle").hide();
 		$("#connectBtn").attr("disabled", true);
 		$("#disConnectBtn").attr("disabled", false);
-		$("#name").attr("disabled", true);
+		$("#userName").attr("disabled", true);
 		$("#sendChatBtn").attr("disabled", false);
 		$("#chatBox").fadeTo(300, 1);
 	}else{
 		$("#loadingCircle").hide();
 		$("#connectBtn").attr("disabled", false);
 		$("#disConnectBtn").attr("disabled", true);
-		$("#name").attr("disabled", false);
+		$("#userName").attr("disabled", false);
 		$("#sendChatBtn").attr("disabled", true);
 		$("#chatBox").fadeTo(300, 0.6);
 	}

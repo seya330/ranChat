@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -33,9 +34,6 @@ import com.seya330.ranchat.chat.service.ChatService;
 import com.seya330.ranchat.chat.vo.ChatMessageVO;
 import com.seya330.ranchat.chat.vo.ChatResponse;
 import com.seya330.ranchat.chat.vo.ChatRoomVO;
-import com.seya330.ranchat.chat.vo.MessageType;
-import com.seya330.ranchat.chat.vo.ChatResponse.ResponseResult;
-import com.seya330.ranchat.user.bean.RegUserBean;
 import com.seya330.ranchat.user.service.UserService;
 import com.seya330.ranchat.user.util.JwtUtil;
 import com.seya330.ranchat.user.util.UserUtil;
@@ -75,17 +73,17 @@ public class ChatController {
 	@Autowired
 	private ChatMessageService chatMessageService;
 	
-	@PostMapping("/invite/{userId}")
-	public Object invite(@PathVariable String userId) {
+	@PostMapping("/invite")
+	public Object invite(@RequestBody ChatRoomVO chatRoomVO) {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		String jwt = request.getHeader("auth-token");
 		
-		return ResponseEntity.status(HttpStatus.OK).body(chatService.inviteUser(userId));
+		return ResponseEntity.status(HttpStatus.OK).body(chatService.inviteUser(chatRoomVO));
 	}
 	
 	@PostMapping("/groupChat/createToken")
 	public Object createToken(HttpServletResponse response) {
-		RegUserBean userBean = UserUtil.getUserInSession();
+		RegUserVO userBean = UserUtil.getUserInSession();
 		HashMap<String, String> result = new HashMap<String, String>();
 		String jwtToken = jwtUtil.userBeanToJwtToken(userBean);
 		
@@ -107,15 +105,15 @@ public class ChatController {
 	
 	@GetMapping("/groupChat/chatRoomList")
 	public Object chatRoomList() {
-		//토큰 가지고 와서 chatRoomVO 에 regUserBean 에 셋팅 해주고 해야함
+		//토큰 가지고 와서 chatRoomVO 에 RegUserVO 에 셋팅 해주고 해야함
 		ChatRoomVO chatRoomVO = new ChatRoomVO();
-		chatRoomVO.setRegUserBean(UserUtil.getUserInSession());
+		chatRoomVO.setRegUserVO(UserUtil.getUserInSession());
 		return ResponseEntity.status(HttpStatus.OK).body(chatRoomService.getChatRoomList(chatRoomVO));
 	}
 	
 	@GetMapping("/groupChat/chatList")
 	public Object chatList(ChatMessageVO chatMessageVO) {
-		RegUserBean user = UserUtil.getUserInSession();
+		RegUserVO user = UserUtil.getUserInSession();
 		chatMessageVO.setReceiverId(user.getUniqId());
 		chatMessageVO.setMessageList(chatMessageService.getChatMessageList(chatMessageVO));
 		return ResponseEntity.status(HttpStatus.OK).body(chatMessageVO);

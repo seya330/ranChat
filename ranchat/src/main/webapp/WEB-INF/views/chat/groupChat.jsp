@@ -5,9 +5,8 @@
 <meta charset="UTF-8">
 <title>로그인</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	
 	<link rel="stylesheet" type="text/css" href="/resources/lib/css/bootstrap/bootstrap.min.css"/>
-	
-	
 	<link rel="stylesheet" href="/resources/template/assets/css/main.css" />
 	<link rel="stylesheet" type="text/css" href="/resources/ranchat/css/common.css"/>
 	<!-- Scripts -->
@@ -94,6 +93,9 @@
 		}
 		.bg-primary{
 			background-color: #6cc091 !important;
+		}
+		tr.selected{
+			background-color: rgba(144, 144, 144, 0.075);
 		}
 	</style>
 	
@@ -188,25 +190,42 @@
 
 <!-- 초대 다이얼로그 -->
 <div class="" id="inviteDialog" title="사용자 초대">
-<form>
-	<!-- <div class="row uniform">
-		<div class="11u 12u$(small)">
-			<input type="text" id="" name="" placeholder="초대할 사용자 입력">
+	<div class="row">
+		<div class="col-6">
+			<form>
+				<div class="input-group">
+			       <input type="text" id="invitingUserId" name="invitingUserId" placeholder="초대할 사용자 입력" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">
+			       <div class="input-group-append">
+			         <button id="inviteBtn" type="submit" class="btn btn-link" style="border: none;"> <i class="fa fa-paper-plane"></i></button>
+			       </div>
+			    </div>
+			</form>
+			
+			<div style="margin-top: 2rem; height: 200px; overflow: scroll;">
+				<table>
+					<tbody id="invSearchUserTable">
+					</tbody>
+				</table>
+			</div>
+			
 		</div>
-		<div class="1u$ 12u$(small)">
-			<input type="submit" class="fit" value="보내기">
-			<button type="button" class="">보내깅</button>
+		<div class="col-6" style="">
+			<div style="font-family: Cafe24Dangdanghae; color: #6f6f6f;">
+				초대 사용자 목록
+			</div>
+			<div style="margin-top: 52px; height: 200px; overflow: scroll;">
+				<table>
+					<tbody id="invSelectedUserTable">
+					
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div> -->
-	<div class="input-group">
-       <input type="text" id="invitingUserId" name="invitingUserId" placeholder="초대할 사용자 입력" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">
-       <div class="input-group-append">
-         <button id="inviteBtn" type="submit" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
-       </div>
-     </div>
-</form>
-
-  <div class="button_area"><button class="button small small-btn" onclick='$("#inviteDialog").dialog("close");'>닫 기</button></div>
+	</div>
+	<div class="button_area col-12">
+		<button class="button small small-btn" onclick='addInvitingUser();'>초 대</button>
+		<button class="button small small-btn" onclick='$("#inviteDialog").dialog("close");'>닫 기</button>
+	</div>
 </div>
 
 
@@ -255,9 +274,14 @@
 {{/list}}
 </script>
 
-<!-- 보낸 메세지 -->
-<script id="sendMsgTemplate" type="text/template">
-	
+<script id="regUserListTemplate" type="text/template">
+{{#regUserList}}
+	<tr data-uniq-id="{{uniqId}}" data-user-id="{{userId}}" style="border-top: 1px solid #dbdbdb; border-bottom: 1px solid #dbdbdb;"><td style="width: 80%;">{{userId}}</td><td style="width: 20%;"><button class="button small small-btn" >선택</button></td></tr>
+{{/regUserList}}
+</script>
+
+<script id="selectedUserTemplate" type="text/template">
+	<tr data-uniq-id="{{uniqId}}" data-user-id="{{userId}}" style="border-top: 1px solid #dbdbdb; border-bottom: 1px solid #dbdbdb;"><td style="width: 80%;">{{userId}}</td><td style="width: 20%;"><button class="button small small-btn" >취소</button></td></tr>
 </script>
 </body>
 </html>

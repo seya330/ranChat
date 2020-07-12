@@ -2,7 +2,6 @@ package com.seya330.ranchat.user.vo;
 
 import java.sql.Date;
 
-import com.seya330.ranchat.user.bean.RegUserBean;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,13 +14,21 @@ public class RegUserVO {
 	Date regDate;
 	Date modDate;
 	String userStatus;
-	RegUserBean regUserBean;
 	LoginResultType loginResultType;
+	
+	RegUserSearchVO searchVO;
 	
 	public String getUserStatus() {
 		if(userStatus == null || "".equals(userStatus))
 			return "U";
 		else
 			return userStatus;
+	}
+	
+	public RegUserSearchVO getSearchVO() {
+		if(searchVO == null)
+			searchVO = new RegUserSearchVO();
+		
+		return searchVO;
 	}
 }

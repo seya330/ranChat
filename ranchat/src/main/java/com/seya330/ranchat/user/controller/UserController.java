@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seya330.ranchat.user.bean.RegUserBean;
 import com.seya330.ranchat.user.service.UserService;
 import com.seya330.ranchat.user.util.JwtUtil;
-import com.seya330.ranchat.user.util.UserUtil;
 import com.seya330.ranchat.user.vo.LoginResultType;
 import com.seya330.ranchat.user.vo.RegUserVO;
-import com.seya330.ranchat.util.ServletUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -60,4 +60,8 @@ public class UserController {
 		return ResponseEntity.status(result).body(resultType);
 	}
 	
+	@GetMapping("/search")
+	public Object search(RegUserVO regUserVO) {
+		return ResponseEntity.status(HttpStatus.OK).body(userService.searchUser(regUserVO));
+	}
 }

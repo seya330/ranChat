@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import com.seya330.ranchat.chat.vo.ChatRoomJoinnerVO;
 import com.seya330.ranchat.chat.vo.ChatRoomVO;
 import com.seya330.ranchat.chat.vo.ChatUserVO;
-import com.seya330.ranchat.user.bean.RegUserBean;
 
 @Repository
 public class ChatRoomDAO {

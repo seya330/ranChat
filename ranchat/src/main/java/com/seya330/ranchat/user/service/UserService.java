@@ -1,9 +1,10 @@
 package com.seya330.ranchat.user.service;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.seya330.ranchat.user.bean.RegUserBean;
 import com.seya330.ranchat.user.dao.RegUserDAO;
 import com.seya330.ranchat.user.util.UserUtil;
 import com.seya330.ranchat.user.vo.LoginResultType;
@@ -16,7 +17,7 @@ public class UserService {
 	RegUserDAO userDAO;
 	
 	public boolean addUser(RegUserVO userVO) {
-		RegUserBean userBean = new RegUserBean();
+		RegUserVO userBean = new RegUserVO();
 		userBean.setUniqId(IDGeneratorUtil.generateId("M", 19));
 		userBean.setUserId(userVO.getUserId());
 		userBean.setPassword(userVO.getPassword());
@@ -30,7 +31,7 @@ public class UserService {
 	}
 	
 	public LoginResultType login(RegUserVO userVO) {
-		RegUserBean userBean = userDAO.selectRegUser(userVO);
+		RegUserVO userBean = userDAO.selectRegUser(userVO).get(0);
 		if(userBean == null) {			
 			return LoginResultType.INVALID_ID;
 		}
@@ -40,15 +41,20 @@ public class UserService {
 			return LoginResultType.INVALID_PASSWORD;
 		}
 		
-		userVO.setRegUserBean(userBean);
-		UserUtil.setUserInSession(userVO.getRegUserBean());
+		UserUtil.setUserInSession(userBean);
 		return LoginResultType.SUCCESS;
 		
 	}
 	
-	public RegUserBean getUserByUserId(String userId) {
-		RegUserVO vo = new RegUserVO();
-		vo.setUserId(userId);
-		return userDAO.selectRegUser(vo);
+	public RegUserVO getUserOne(RegUserVO regUserVO) {
+		return userDAO.selectRegUser(regUserVO).get(0);
+	}
+	
+	public ArrayList<RegUserVO> searchUser(RegUserVO userVO){
+		userVO.getSearchVO().addExceptUniqId(UserUtil.getUserInSession().getUniqId());
+		int cnt = userDAO.selectRegUserCnt(userVO);
+		if(cnt == 0)
+			return new ArrayList<RegUserVO>();
+		return userDAO.selectRegUser(userVO);
 	}
 }
