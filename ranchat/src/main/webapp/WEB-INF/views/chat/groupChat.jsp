@@ -2,13 +2,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>로그인</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" >
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>로그인</title>
 	
 	<link rel="stylesheet" type="text/css" href="/resources/lib/css/bootstrap/bootstrap.min.css"/>
 	<link rel="stylesheet" href="/resources/template/assets/css/main.css" />
 	<link rel="stylesheet" type="text/css" href="/resources/ranchat/css/common.css"/>
+	<link rel="stylesheet" type="text/css" href="/resources/lib/css/jquery/jquery-ui.css"/>
 	<!-- Scripts -->
 	<script src="/resources/template/assets/js/jquery.min.js"></script>
 	<script src="/resources/template/assets/js/skel.min.js"></script>
@@ -35,6 +37,7 @@
 		}
 		button{
 			height: auto !important;
+			background-color: white;
 		}
 		p{
 			margin: 0;
