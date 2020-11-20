@@ -25,10 +25,9 @@ import com.seya330.ranchat.chat.bean.ChatUserBean;
 import com.seya330.ranchat.chat.service.ChatMessageService;
 import com.seya330.ranchat.chat.service.ChatService;
 import com.seya330.ranchat.chat.vo.ChatMessageVO;
-import com.seya330.ranchat.chat.vo.ChatResponse;
 import com.seya330.ranchat.chat.vo.MessageType;
 import com.seya330.ranchat.user.util.JwtUtil;
-import com.seya330.ranchat.util.ServletUtil;
+import com.seya330.ranchat.user.vo.RegUserVO;
 
 @RestController
 public class ChatMessageHandleController {
@@ -71,8 +70,9 @@ public class ChatMessageHandleController {
 	public void sendGroupChatMessage(@Payload ChatMessageVO chatMessageVO, StompHeaderAccessor headerAccessor) {
 		String authToken = "";
 		authToken += headerAccessor.getNativeHeader("auth-token").get(0);
-		chatMessageVO.setSenderId(jwtUtil.getJwtDataFromKey(authToken, "uniqId"));
-		chatMessageVO.setSendUserId(jwtUtil.getJwtDataFromKey(authToken, "userId"));
+		RegUserVO user = jwtUtil.getUserByToken(authToken);
+		chatMessageVO.setSenderId(user.getUniqId());
+		chatMessageVO.setSendUserId(user.getUserId());
 		chatMessageService.sendChatMessage(chatMessageVO);
 	}
 }

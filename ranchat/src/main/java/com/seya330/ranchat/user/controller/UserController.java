@@ -51,7 +51,7 @@ public class UserController {
 	@PostMapping("/login")
 	public Object login(@RequestBody RegUserVO userVO) {
 		HttpStatus result = HttpStatus.OK;
-		LoginResultType resultType = userService.login(userVO);
+		LoginResultType resultType = userService.loginToRanchat(userVO);
 		
 		if(resultType != resultType.SUCCESS) {
 			result = HttpStatus.INTERNAL_SERVER_ERROR;

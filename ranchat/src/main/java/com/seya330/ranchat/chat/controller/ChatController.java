@@ -10,14 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -104,16 +99,20 @@ public class ChatController {
 	}
 	
 	@GetMapping("/groupChat/chatRoomList")
-	public Object chatRoomList() {
+	public Object chatRoomList(HttpServletRequest request) {
 		//토큰 가지고 와서 chatRoomVO 에 RegUserVO 에 셋팅 해주고 해야함
+		String token = request.getHeader("authToken");
+		RegUserVO user = jwtUtil.getUserByToken(token);
 		ChatRoomVO chatRoomVO = new ChatRoomVO();
-		chatRoomVO.setRegUserVO(UserUtil.getUserInSession());
+		chatRoomVO.setRegUserVO(user);
 		return ResponseEntity.status(HttpStatus.OK).body(chatRoomService.getChatRoomList(chatRoomVO));
 	}
 	
 	@GetMapping("/groupChat/chatList")
-	public Object chatList(ChatMessageVO chatMessageVO) {
-		RegUserVO user = UserUtil.getUserInSession();
+	public Object chatList(HttpServletRequest request, ChatMessageVO chatMessageVO) {
+		String token = request.getHeader("authToken");
+		String asdf = request.getParameter("chatRoomId");
+		RegUserVO user = jwtUtil.getUserByToken(token);
 		chatMessageVO.setReceiverId(user.getUniqId());
 		chatMessageVO.setMessageList(chatMessageService.getChatMessageList(chatMessageVO));
 		return ResponseEntity.status(HttpStatus.OK).body(chatMessageVO);

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.seya330.ranchat.user.dao.RegUserDAO;
+import com.seya330.ranchat.user.util.JwtUtil;
 import com.seya330.ranchat.user.util.UserUtil;
 import com.seya330.ranchat.user.vo.LoginResultType;
 import com.seya330.ranchat.user.vo.RegUserVO;
@@ -15,6 +16,9 @@ import com.seya330.ranchat.util.IDGeneratorUtil;
 public class UserService {
 	@Autowired
 	RegUserDAO userDAO;
+	
+	@Autowired
+	JwtUtil jwtUtil;
 	
 	public boolean addUser(RegUserVO userVO) {
 		RegUserVO userBean = new RegUserVO();
@@ -30,7 +34,7 @@ public class UserService {
 		return userDAO.selectRegUserCnt(userVO) > 0 ? true : false;
 	}
 	
-	public LoginResultType login(RegUserVO userVO) {
+	public LoginResultType loginToRanchat(RegUserVO userVO) {
 		RegUserVO userBean = userDAO.selectRegUser(userVO).get(0);
 		if(userBean == null) {			
 			return LoginResultType.INVALID_ID;
@@ -43,8 +47,26 @@ public class UserService {
 		
 		UserUtil.setUserInSession(userBean);
 		return LoginResultType.SUCCESS;
-		
 	}
+	
+	public RegUserVO getToken(RegUserVO userVO) {
+		RegUserVO userBean = null;
+		if(userDAO.selectRegUser(userVO).size() > 0)
+			userBean = userDAO.selectRegUser(userVO).get(0);
+		
+		if(userBean == null) {
+			userBean = new RegUserVO();
+			userBean.setLoginResultType(LoginResultType.INVALID_ID);
+		}else if(!userBean.getPassword().equals(userVO.getPassword())) {
+			userBean.setLoginResultType(LoginResultType.INVALID_PASSWORD);
+		}else {
+			userBean.setLoginResultType(LoginResultType.SUCCESS);
+			String token = jwtUtil.userBeanToJwtToken(userBean);
+			userBean.setToken(token);
+		}
+		return userBean;
+	}
+	
 	
 	public RegUserVO getUserOne(RegUserVO regUserVO) {
 		return userDAO.selectRegUser(regUserVO).get(0);

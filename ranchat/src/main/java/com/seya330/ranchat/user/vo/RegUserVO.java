@@ -15,6 +15,8 @@ public class RegUserVO {
 	Date modDate;
 	String userStatus;
 	LoginResultType loginResultType;
+	UserResult result;
+	String token;
 	
 	RegUserSearchVO searchVO;
 	
