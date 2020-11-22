@@ -89,8 +89,9 @@ public class WebSocketEventListener {
 		String chatType = (String)headerAccessor.getSessionAttributes().get("chatType");
 		if("GROUPCHAT".equals(chatType)) {
 			redisLoginOperation.getOperations().delete(sessionId);
+		}else {
+			logger.info("[Disconnected] websocket session id : {}", sessionId);
+			chatService.disconnectUser(sessionId);
 		}
-		logger.info("[Disconnected] websocket session id : {}", sessionId);
-		chatService.disconnectUser(sessionId);
 	}
 }
