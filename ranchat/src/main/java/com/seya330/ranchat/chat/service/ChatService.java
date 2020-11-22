@@ -139,9 +139,9 @@ public class ChatService {
     	chatRoomDAO.insertChatRoom(room);
     	
     	//자신을 채팅방 접속자에 추가
-    	ChatRoomJoinnerVO joinner = new ChatRoomJoinnerVO(room, UserUtil.getUserInSession());
+    	ChatRoomJoinnerVO joinner = new ChatRoomJoinnerVO(room, chatRoomVO.getRegUserVO());
     	chatRoomDAO.insertChatRoomJoinner(joinner);
-    	room.addJoinUser(UserUtil.getUserInSession());
+    	room.addJoinUser(chatRoomVO.getRegUserVO());
     	
     	//자신 외 사용자들 추가
     	for(String uniqId : chatRoomVO.getInviteUniqIdList()) {
@@ -153,7 +153,7 @@ public class ChatService {
     			return result;
     		}
     		
-    		if(userVO.getUniqId().equals(UserUtil.getUserInSession().getUniqId())) {
+    		if(userVO.getUniqId().equals(chatRoomVO.getRegUserVO().getUniqId())) {
         		result.setResult(GroupChatResult.SAME_USER_ID);
         		return result;
         	}

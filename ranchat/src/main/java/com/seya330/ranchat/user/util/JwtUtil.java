@@ -1,5 +1,4 @@
 package com.seya330.ranchat.user.util;
-
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -62,19 +61,12 @@ public class JwtUtil {
 	
 	public Map<String, Object> verifyToken(String token) {
         Map<String, Object> claimMap = null;
-        System.out.println(token);
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey("SEYA330R@NCH@TKEY".getBytes()) // Set Key
-                    .parseClaimsJws(token) // 파싱 및 검증, 실패 시 에러
-                    .getBody();
+        Claims claims = Jwts.parser()
+                .setSigningKey("SEYA330R@NCH@TKEY".getBytes()) // Set Key
+                .parseClaimsJws(token) // 파싱 및 검증, 실패 시 에러
+                .getBody();
 
-            claimMap = claims;
-        } catch (ExpiredJwtException e) { // 토큰이 만료되었을 경우
-            System.out.println(e);
-        } catch (Exception e) { // 그외 에러났을 경우
-            System.out.println(e);
-        }
+        claimMap = claims;
         return claimMap;
     }
 	

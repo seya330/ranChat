@@ -61,7 +61,9 @@ public class UserController {
 	}
 	
 	@GetMapping("/search")
-	public Object search(RegUserVO regUserVO) {
+	public Object search(HttpServletRequest request, RegUserVO regUserVO) {
+		RegUserVO user = jwtUtil.getUserByToken(request.getHeader("authToken"));
+		regUserVO.getSearchVO().addExceptUniqId(user.getUniqId());
 		return ResponseEntity.status(HttpStatus.OK).body(userService.searchUser(regUserVO));
 	}
 }

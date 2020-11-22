@@ -73,7 +73,6 @@ public class UserService {
 	}
 	
 	public ArrayList<RegUserVO> searchUser(RegUserVO userVO){
-		userVO.getSearchVO().addExceptUniqId(UserUtil.getUserInSession().getUniqId());
 		int cnt = userDAO.selectRegUserCnt(userVO);
 		if(cnt == 0)
 			return new ArrayList<RegUserVO>();

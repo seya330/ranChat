@@ -32,22 +32,33 @@
 	<select id="selectChatRoom" parameterType="com.seya330.ranchat.chat.vo.ChatRoomVO" resultType="com.seya330.ranchat.chat.vo.ChatRoomVO">
 		SELECT
 			ROOM.CHAT_ROOM_ID
-			, ROOM.REG_DATE
-			, (SELECT MESSAGE_CONTENTS FROM CHAT_ROOM_MESSAGE MSG WHERE MSG.CHAT_ROOM_ID = ROOM.CHAT_ROOM_ID ORDER BY REG_DATE DESC LIMIT 1) SUMMARY
+			, DATE_FORMAT(ROOM.REG_DATE, '%Y-%m-%d %H:%i:%s') REG_DATE
+			, MSG2.MESSAGE_CONTENTS SUMMARY
+			, DATE_FORMAT(MSG2.REG_DATE, '%Y-%m-%d %H:%i:%s') MSG_REG_DATE
 			, (SELECT COUNT(*) FROM CHAT_MESSAGE_INFO WHERE RECEIVER_ID = #{regUserVO.uniqId, jdbcType=VARCHAR} AND CHAT_ROOM_ID = ROOM.CHAT_ROOM_ID AND READ_YN = 'N') UNREAD_CNT
 		FROM
 			CHAT_ROOM ROOM
 			INNER JOIN
 			CHAT_ROOM_JOINNER JOINNER
 			ON ROOM.CHAT_ROOM_ID = JOINNER.CHAT_ROOM_ID
-			<where>
+			INNER JOIN
+			(
+			SELECT MSG.*
+			FROM CHAT_ROOM_MESSAGE MSG
+			INNER JOIN
+			(SELECT CHAT_ROOM_ID CHAT_ROOM_ID, MAX(REG_DATE) REG_DATE FROM CHAT_ROOM_MESSAGE GROUP BY CHAT_ROOM_ID) MAXDATE
+			ON MSG.CHAT_ROOM_ID = MAXDATE.CHAT_ROOM_ID AND MSG.REG_DATE = MAXDATE.REG_DATE
+			) MSG2
+			ON ROOM.CHAT_ROOM_ID = MSG2.CHAT_ROOM_ID
+		<where>
 			<if test="regUserVO.uniqId != null">
 			AND JOINNER.JOINNER_ID = #{regUserVO.uniqId, jdbcType=VARCHAR}
 			</if>
 			<if test="chatRoomId != null">
 			AND ROOM.CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
 			</if>
-			</where>
+		</where>
+		ORDER BY UNREAD_CNT DESC, MSG_REG_DATE DESC
 	</select>
 	
 	<select id="selectChatRoomJoinner" parameterType="com.seya330.ranchat.chat.vo.ChatRoomJoinnerVO" resultType="com.seya330.ranchat.chat.vo.ChatRoomJoinnerVO">

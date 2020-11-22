@@ -33,6 +33,9 @@
 			<if test="userId != null">
 				AND USER_ID = #{userId, jdbcType=VARCHAR}
 			</if>
+			<if test="searchVO.userId != null">
+				AND USER_ID LIKE CONCAT('%', #{searchVO.userId, jdbcType=VARCHAR}, '%')
+			</if>
 			<if test="searchVO.exceptUniqId != null and searchVO.exceptUniqId.size() > 0">
 				AND USER_ID NOT IN
 				<foreach collection="searchVO.exceptUniqId" index="index" item="exceptUniqId" open="(" separator="," close=")">

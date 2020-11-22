@@ -21,6 +21,8 @@ public class ChatRoomVO implements ChatRoom{
 	private ArrayList<ChatRoomJoinnerVO> joinnerList;
 	private int unreadCnt;
 	private String[] inviteUniqIdList;
+	private String regDate;
+	private String msgRegDate;
 	
 	public ChatRoomVO() {
 		joinUserMap = new LinkedHashMap<String, RegUserVO>();

@@ -1,5 +1,6 @@
 package com.seya330.ranchat.chat.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,8 +72,8 @@ public class ChatController {
 	@PostMapping("/invite")
 	public Object invite(@RequestBody ChatRoomVO chatRoomVO) {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		String jwt = request.getHeader("auth-token");
-		
+		String token = request.getHeader("authToken");
+		chatRoomVO.setRegUserVO(jwtUtil.getUserByToken(token));
 		return ResponseEntity.status(HttpStatus.OK).body(chatService.inviteUser(chatRoomVO));
 	}
 	
@@ -102,8 +103,8 @@ public class ChatController {
 	public Object chatRoomList(HttpServletRequest request) {
 		//토큰 가지고 와서 chatRoomVO 에 RegUserVO 에 셋팅 해주고 해야함
 		String token = request.getHeader("authToken");
-		RegUserVO user = jwtUtil.getUserByToken(token);
 		ChatRoomVO chatRoomVO = new ChatRoomVO();
+		RegUserVO user = jwtUtil.getUserByToken(token);
 		chatRoomVO.setRegUserVO(user);
 		return ResponseEntity.status(HttpStatus.OK).body(chatRoomService.getChatRoomList(chatRoomVO));
 	}
