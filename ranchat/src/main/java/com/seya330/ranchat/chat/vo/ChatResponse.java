@@ -13,6 +13,11 @@ public class ChatResponse {
 		
 	}
 	
+	public ChatResponse(ResponseResult responseResult, String sessionId) {
+		this.responseResult = responseResult;
+		this.sessionId = sessionId;
+	}
+	
 	public ChatResponse(ResponseResult responseResult, String chatRoomId, String sessionId) {
 		this.responseResult = responseResult;
 		this.chatRoomId = chatRoomId;

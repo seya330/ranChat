@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import com.seya330.ranchat.chat.bean.ChatRoomRepository;
@@ -91,11 +93,10 @@ public class ChatController {
 	
 	@GetMapping("/join")
 	public DeferredResult<ChatResponse> joinRequest(ChatUserBean chatUserBean){
-		String sessionId = ServletUtil.getSession().getId();
-		logger.info("join request. session id : {}, join user name : {}", sessionId, chatUserBean.getUserName());
+		logger.info("join request. session id : {}, join user name : {}", chatUserBean.getSessionId());
 		
 		final DeferredResult<ChatResponse> deferredResult = new DeferredResult<>(null);
-		chatService.joinChatRoom(sessionId, deferredResult);
+		chatService.joinChatRoom(chatUserBean.getSessionId(), deferredResult);
 		return deferredResult;
 	}
 	
@@ -125,4 +126,18 @@ public class ChatController {
 		chatMessageService.readChatMessage(chatMessageVO);
 		return ResponseEntity.status(HttpStatus.OK).body("");
 	}
+	
+	@PostMapping("/cancel")
+	public void cancelRequest(HttpServletRequest request, @RequestBody ChatUserBean ChatUserBean) {
+		chatService.cancelWaiting(ChatUserBean.getSessionId());
+	}
+	
+	@ExceptionHandler(AsyncRequestTimeoutException.class)
+	public Object asyncRequestTimeoutExceptionHandler(HttpServletRequest request, AsyncRequestTimeoutException e) {
+		e.printStackTrace();
+		String sessionId = request.getParameter("sessionId");
+		chatService.timeoutWaitingUser(sessionId);
+		return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(ChatResponse.ResponseResult.TIMEOUT);
+	}
+	
 }

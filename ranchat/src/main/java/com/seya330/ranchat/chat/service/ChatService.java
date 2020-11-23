@@ -100,6 +100,23 @@ public class ChatService {
         }
     }
     
+    public void timeoutWaitingUser(String sessionId) {
+    	logger.info("timeout session id : " + sessionId);
+    	lock.readLock().lock();
+    	waitingUsers.remove(sessionId);
+    	logger.info("Current waiting users : " + waitingUsers.size());
+    	lock.readLock().unlock();
+    }
+    
+    public void cancelWaiting(String sessionId) {
+    	logger.info("waiting cancel: " + sessionId);
+    	lock.writeLock().lock();
+    	DeferredResult<ChatResponse> result = waitingUsers.remove(sessionId);
+    	result.setResult(new ChatResponse(ResponseResult.CANCEL, sessionId));
+    	lock.writeLock().unlock();
+    	logger.info("Current waiting users : " + waitingUsers.size());
+    }
+    
     public void sendMessage(String chatRoomId, ChatMessageVO chatMessage) {
         String destination = getDestination(chatRoomId);
         messagingTemplate.convertAndSend(destination, chatMessage);

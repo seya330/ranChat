@@ -3,6 +3,7 @@ package com.seya330.ranchat.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mobile.device.DeviceResolverHandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -59,5 +60,12 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		.allowedMethods("*")
 		.allowCredentials(false)
 		.maxAge(3600);
+	}
+
+	//DeferredResult 를 사용하는 Async 로직에 타임아웃 60초 설정.
+	@Override
+	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+		WebMvcConfigurer.super.configureAsyncSupport(configurer);
+		configurer.setDefaultTimeout(30000);
 	}
 }
