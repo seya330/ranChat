@@ -24,7 +24,7 @@ public class UserService {
 		RegUserVO userBean = new RegUserVO();
 		userBean.setUniqId(IDGeneratorUtil.generateId("M", 19));
 		userBean.setUserId(userVO.getUserId());
-		userBean.setPassword(userVO.getPassword());
+		userBean.setPassword(UserUtil.getSha256String(userVO.getPassword()));
 		userDAO.insertRegUser(userBean);
 		return true;
 	}
@@ -57,9 +57,10 @@ public class UserService {
 		if(userBean == null) {
 			userBean = new RegUserVO();
 			userBean.setLoginResultType(LoginResultType.INVALID_ID);
-		}else if(!userBean.getPassword().equals(userVO.getPassword())) {
+		}else if(!userBean.getPassword().equals(UserUtil.getSha256String(userVO.getPassword()))) {
 			userBean.setLoginResultType(LoginResultType.INVALID_PASSWORD);
 		}else {
+			userBean.setPassword(null);
 			userBean.setLoginResultType(LoginResultType.SUCCESS);
 			String token = jwtUtil.userBeanToJwtToken(userBean);
 			userBean.setToken(token);

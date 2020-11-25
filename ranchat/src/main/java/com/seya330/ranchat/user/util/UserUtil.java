@@ -1,14 +1,13 @@
 package com.seya330.ranchat.user.util;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
 import com.seya330.ranchat.user.vo.RegUserVO;
 import com.seya330.ranchat.util.ServletUtil;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 public class UserUtil {
 	private static final String LOGIN_SESSION = "LOGIN_SESSION";
@@ -25,4 +24,23 @@ public class UserUtil {
 		ServletUtil.getSession().removeAttribute("LOGIN_SESSION");
 	}
 	
+	public static String getSha256String(String var) {
+		String val = "";
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+			md.update(var.getBytes());
+			byte byteData[] = md.digest();
+			StringBuffer sb = new StringBuffer();
+			for(int i=0; i<byteData.length; i++) {
+				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+			}
+			val = sb.toString();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			val = "";
+		}
+		return val;
+	}
 }
