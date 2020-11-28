@@ -24,8 +24,10 @@ import com.seya330.ranchat.chat.bean.ChatRoomRepository;
 import com.seya330.ranchat.chat.bean.ChatUserBean;
 import com.seya330.ranchat.chat.service.ChatMessageService;
 import com.seya330.ranchat.chat.service.ChatService;
+import com.seya330.ranchat.chat.service.TopicChatService;
 import com.seya330.ranchat.chat.vo.ChatMessageVO;
 import com.seya330.ranchat.chat.vo.MessageType;
+import com.seya330.ranchat.chat.vo.TopicChatMessageVO;
 import com.seya330.ranchat.user.util.JwtUtil;
 import com.seya330.ranchat.user.vo.RegUserVO;
 
@@ -51,6 +53,9 @@ public class ChatMessageHandleController {
 	
 	@Autowired
 	ChatMessageService chatMessageService;
+	
+	@Autowired
+	TopicChatService topicChatService;
 	/**
 	 * 메세지 발송 
 	 * */
@@ -74,5 +79,15 @@ public class ChatMessageHandleController {
 		chatMessageVO.setSenderId(user.getUniqId());
 		chatMessageVO.setSendUserId(user.getUserId());
 		chatMessageService.sendChatMessage(chatMessageVO);
+	}
+	
+	@MessageMapping("/topic.message/send")
+	public void sendTopicChatMessage(@Payload TopicChatMessageVO message, StompHeaderAccessor headerAccessor) {
+		String authToken = "";
+		authToken += headerAccessor.getNativeHeader("auth-token").get(0);
+		RegUserVO user = jwtUtil.getUserByToken(authToken);
+		message.setSenderId(user.getUniqId());
+		message.setSendUserId(user.getUserId());
+		topicChatService.sendTopicMessage(message);
 	}
 }

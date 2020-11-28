@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seya330.ranchat.chat.dao.TopicChatRoomDAO">
+	<select id="selectTopicChatRoom" parameterType="com.seya330.ranchat.chat.vo.TopicChatRoomVO" resultType="com.seya330.ranchat.chat.vo.TopicChatRoomVO">
+		SELECT
+			CHAT_ROOM_ID,
+			CHAT_TOPIC,
+			REG_USER,
+			DATE_FORMAT(REG_DATE, '%Y-%m-%d %H:%i:%s') regDate
+		FROM
+			TOPIC_CHAT_ROOM ROOM
+		<where>
+			AND ROOM.CHAT_TOPIC LIKE CONCAT('%', #{chatTopic, jdbcType=VARCHAR}, '%')
+		</where>
+	</select>
+	
+	<insert id="insertTopicRoomVisit" parameterType="com.seya330.ranchat.chat.vo.TopicRoomVisitVO">
+		INSERT INTO TOPIC_ROOM_VISIT(VISITOR, CHAT_ROOM_ID, VISIT_DATE, VISIT_CNT)
+		VALUES(
+			#{visitor, jdbcType=VARCHAR},
+			#{chatRoomId, jdbcType=VARCHAR},
+			NOW(),
+			1
+		)
+	</insert>
+	
+	<update id="updateTopicRoomVisit" parameterType="com.seya330.ranchat.chat.vo.TopicRoomVisitVO">
+		UPDATE TOPIC_ROOM_VISIT
+		<set>
+			VISIT_DATE = NOW(),
+			VISIT_CNT = VISIT_CNT + 1,
+		</set>
+		WHERE
+			VISITOR = #{visitor, jdbcType=VARCHAR} AND CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
+	</update>
+	
+	
+	<select id="selectTopicRoomVisitCnt" parameterType="com.seya330.ranchat.chat.vo.TopicRoomVisitVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TOPIC_ROOM_VISIT VISIT INNER JOIN
+			TOPIC_CHAT_ROOM ROOM ON VISIT.CHAT_ROOM_ID = ROOM.CHAT_ROOM_ID
+		<where>
+			AND VISIT.VISITOR = #{visitor, jdbcType=VARCHAR}
+			AND VISIT.CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
+		</where>
+	</select>
+	
+	<select id="selectTopicRoomVisit" parameterType="com.seya330.ranchat.chat.vo.TopicRoomVisitVO" resultType="com.seya330.ranchat.chat.vo.TopicRoomVisitVO">
+		SELECT
+			VISIT.VISITOR VISITOR,
+			VISIT.CHAT_ROOM_ID CHAT_ROOM_ID,
+			ROOM.CHAT_TOPIC CHAT_TOPIC,
+			DATE_FORMAT(VISIT.VISIT_DATE, '%Y-%m-%d %H:%i:%s') VISIT_DATE,
+			VISIT.VISIT_CNT VISIT_CNT
+		FROM
+			TOPIC_ROOM_VISIT VISIT INNER JOIN
+			TOPIC_CHAT_ROOM ROOM ON VISIT.CHAT_ROOM_ID = ROOM.CHAT_ROOM_ID
+		<where>
+			AND VISIT.VISITOR = #{visitor, jdbcType=VARCHAR}
+		</where>
+			ORDER BY VISIT.VISIT_DATE DESC
+			LIMIT 10
+	</select>
+	
+	
+</mapper>

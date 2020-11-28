@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seya330.ranchat.chat.dao.TopicChatMessageDAO">
+
+
+	<select id="selectTopicChatMessageCnt" parameterType="com.seya330.ranchat.chat.vo.TopicChatMessageVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TOPIC_CHAT_MESSAGE MSG
+			INNER JOIN REG_USER SENDER
+			ON MSG.SENDER_ID = SENDER.UNIQ_ID
+		<where>
+			AND MSG.CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
+		</where>
+	</select>
+	
+	<select id="selectTopicChatMessage" parameterType="com.seya330.ranchat.chat.vo.TopicChatMessageVO" resultType="com.seya330.ranchat.chat.vo.TopicChatMessageVO">
+		SELECT * FROM (
+		SELECT
+			MSG.MESSAGE_ID
+			, MSG.MESSAGE_CONTENTS
+			, MSG.SENDER_ID
+			, SENDER.USER_ID SEND_USER_ID
+			, DATE_FORMAT(MSG.REG_DATE, '%Y-%m-%d %H:%i:%S') REG_DATE
+		FROM
+			TOPIC_CHAT_MESSAGE MSG
+			INNER JOIN REG_USER SENDER
+			ON MSG.SENDER_ID = SENDER.UNIQ_ID
+		<where>
+			AND MSG.CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR}
+		</where>
+			ORDER BY REG_DATE ASC
+			LIMIT #{pagingVO.startIdx}, #{pagingVO.blockSize}
+	) A
+	ORDER BY A.REG_DATE
+	</select>
+	
+	<insert id="insertTopicChatMessage" parameterType="com.seya330.ranchat.chat.vo.TopicChatMessageVO">
+		INSERT INTO TOPIC_CHAT_MESSAGE(
+			MESSAGE_ID,
+			MESSAGE_CONTENTS,
+			SENDER_ID,
+			CHAT_ROOM_ID,
+			MESSAGE_STATUS,
+			REG_DATE
+		)VALUES(
+			#{messageId, jdbcType=VARCHAR},
+			#{messageContents, jdbcType=VARCHAR},
+			#{senderId, jdbcType=VARCHAR},
+			#{chatRoomId, jdbcType=VARCHAR},
+			'U',
+			NOW()
+		)
+	</insert>
+</mapper>

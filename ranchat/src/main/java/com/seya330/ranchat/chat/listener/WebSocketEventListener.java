@@ -61,14 +61,13 @@ public class WebSocketEventListener {
 		String chatType = headerAccessor.getNativeHeader("chatType").get(0);
 		Map<String, Object> connectMap = new HashMap<String, Object>();
 		String sessionId = headerAccessor.getSessionId();
-		
-		
 		connectMap.put("chatType", chatType);
 		connectMap.put("sessionId", sessionId);
 		headerAccessor.getSessionAttributes().put("chatType", chatType);
 		if("RANDOM".equals(chatType)) {
 			String chatRoomId = headerAccessor.getNativeHeader("chatRoomId").get(0);
 	        connectMap.put("chatRoomId", chatRoomId);
+	        chatService.connectUser(sessionId, connectMap);
 			logger.info("[Connected] room id : {} | websocket session id : {}", chatRoomId, sessionId);
 		}else if("GROUPCHAT".equals(chatType)) {
 			
@@ -77,8 +76,12 @@ public class WebSocketEventListener {
 			RegUserVO user = new RegUserVO();
 			user.setUniqId(jwtUtil.getJwtDataFromKey(token, "uniqId"));
 			redisLoginOperation.set(sessionId, user);
+		}else if("TOPIC".equals(chatType)){
+			String token = headerAccessor.getNativeHeader("auth-token").get(0);
+			log.info("ws connect - token : " + token);
+			RegUserVO user = new RegUserVO();
+			user.setUniqId(jwtUtil.getJwtDataFromKey(token, "uniqId"));
 		}
-		chatService.connectUser(sessionId, connectMap);
 	}
 
 	@EventListener
@@ -89,6 +92,11 @@ public class WebSocketEventListener {
 		String chatType = (String)headerAccessor.getSessionAttributes().get("chatType");
 		if("GROUPCHAT".equals(chatType)) {
 			redisLoginOperation.getOperations().delete(sessionId);
+		}else if("TOPIC".equals(chatType)){
+			String token = headerAccessor.getNativeHeader("auth-token").get(0);
+			log.info("ws connect - token : " + token);
+			RegUserVO user = new RegUserVO();
+			user.setUniqId(jwtUtil.getJwtDataFromKey(token, "uniqId"));
 		}else {
 			logger.info("[Disconnected] websocket session id : {}", sessionId);
 			chatService.disconnectUser(sessionId);
