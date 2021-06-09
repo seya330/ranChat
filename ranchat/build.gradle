@@ -39,7 +39,7 @@ dependencies {
     exclude group: 'io.lettuce', module: 'lettuce-core'
   }
   implementation group: 'redis.clients', name: 'jedis', version: '2.9.0'
-  implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
+  runtimeOnly("mysql:mysql-connector-java")
   runtimeOnly 'com.h2database:h2'
 }
 
