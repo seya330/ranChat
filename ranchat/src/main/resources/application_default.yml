@@ -1,0 +1,17 @@
+server:
+  port: 2500
+spring:
+  datasource:
+    driver: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://ec2-13-125-149-76.ap-northeast-2.compute.amazonaws.com:3306/ranchat?characterEncoding=utf8
+    username: ranchat
+    password: R@nchat
+  mvc:
+    static-path-pattern: /static/**
+  resources:
+    static-locations: classpath:/static/
+    add-mappings: true
+redis:
+  host: ec2-13-125-149-76.ap-northeast-2.compute.amazonaws.com
+  port: 6379
+  password: redis
