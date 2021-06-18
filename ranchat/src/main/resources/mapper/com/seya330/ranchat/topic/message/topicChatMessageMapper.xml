@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.seya330.ranchat.chat.dao.TopicChatMessageDAO">
+<mapper namespace="com.seya330.ranchat.infrastructure.chat.TopicChatMessageDAO">
 
 
-	<select id="selectTopicChatMessageCnt" parameterType="com.seya330.ranchat.chat.vo.TopicChatMessageVO" resultType="int">
+	<select id="selectTopicChatMessageCnt" parameterType="com.seya330.ranchat.core.chat.vo.TopicChatMessageVO" resultType="int">
 		SELECT
 			COUNT(*)
 		FROM
@@ -15,7 +15,7 @@
 		</where>
 	</select>
 	
-	<select id="selectTopicChatMessage" parameterType="com.seya330.ranchat.chat.vo.TopicChatMessageVO" resultType="com.seya330.ranchat.chat.vo.TopicChatMessageVO">
+	<select id="selectTopicChatMessage" parameterType="com.seya330.ranchat.core.chat.vo.TopicChatMessageVO" resultType="com.seya330.ranchat.core.chat.vo.TopicChatMessageVO">
 		SELECT * FROM (
 		SELECT
 			MSG.MESSAGE_ID
@@ -36,7 +36,7 @@
 	ORDER BY A.REG_DATE
 	</select>
 	
-	<insert id="insertTopicChatMessage" parameterType="com.seya330.ranchat.chat.vo.TopicChatMessageVO">
+	<insert id="insertTopicChatMessage" parameterType="com.seya330.ranchat.core.chat.vo.TopicChatMessageVO">
 		INSERT INTO TOPIC_CHAT_MESSAGE(
 			MESSAGE_ID,
 			MESSAGE_CONTENTS,

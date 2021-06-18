@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<c:set var="userInfo" value='<%=com.seya330.ranchat.user.util.UserUtil.getUserInSession()%>' />
+<c:set var="userInfo" value='<%=com.seya330.ranchat.share.util.UserUtil.getUserInSession()%>' />
 <header id="header">
 	<div class="inner">
 		<a href="/" class="logo"><strong>Sourced</strong> by seya330</a>

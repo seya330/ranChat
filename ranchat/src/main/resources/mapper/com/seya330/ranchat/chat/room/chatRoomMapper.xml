@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.seya330.ranchat.dao.ChatRoomDAO">
-	<insert id="insertChatRoom" parameterType="com.seya330.ranchat.chat.vo.ChatRoomVO">
+	<insert id="insertChatRoom" parameterType="com.seya330.ranchat.core.chat.vo.ChatRoomVO">
 		INSERT INTO CHAT_ROOM(
 			CHAT_ROOM_ID
 			, CHAT_ROOM_NAME
@@ -13,7 +13,7 @@
 		)
 	</insert>
 	
-	<insert id="insertChatRoomJoinner" parameterType="com.seya330.ranchat.chat.vo.ChatRoomJoinnerVO">
+	<insert id="insertChatRoomJoinner" parameterType="com.seya330.ranchat.core.chat.vo.ChatRoomJoinnerVO">
 		INSERT INTO CHAT_ROOM_JOINNER(
 			CHAT_ROOM_ID
 			, JOINNER_ID
@@ -29,7 +29,7 @@
 		)
 	</insert>
 	
-	<select id="selectChatRoom" parameterType="com.seya330.ranchat.chat.vo.ChatRoomVO" resultType="com.seya330.ranchat.chat.vo.ChatRoomVO">
+	<select id="selectChatRoom" parameterType="com.seya330.ranchat.core.chat.vo.ChatRoomVO" resultType="com.seya330.ranchat.core.chat.vo.ChatRoomVO">
 		SELECT
 			ROOM.CHAT_ROOM_ID
 			, DATE_FORMAT(ROOM.REG_DATE, '%Y-%m-%d %H:%i:%s') REG_DATE
@@ -61,7 +61,7 @@
 		ORDER BY UNREAD_CNT DESC, MSG_REG_DATE DESC
 	</select>
 	
-	<select id="selectChatRoomJoinner" parameterType="com.seya330.ranchat.chat.vo.ChatRoomJoinnerVO" resultType="com.seya330.ranchat.chat.vo.ChatRoomJoinnerVO">
+	<select id="selectChatRoomJoinner" parameterType="com.seya330.ranchat.core.chat.vo.ChatRoomJoinnerVO" resultType="com.seya330.ranchat.core.chat.vo.ChatRoomJoinnerVO">
 		SELECT
 			CHAT_ROOM_ID
 			, USER_ID

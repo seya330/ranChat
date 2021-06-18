@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.seya330.ranchat.dao.ChatMessageDAO">
-	<insert id="insertChatRoomMessage" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO">
+	<insert id="insertChatRoomMessage" parameterType="com.seya330.ranchat.core.chat.vo.ChatMessageVO">
 		INSERT INTO CHAT_ROOM_MESSAGE(
 			MESSAGE_ID
 			, MESSAGE_CONTENTS
@@ -21,7 +21,7 @@
 	</insert>
 	
 	
-	<insert id="insertChatMessageInfoQuery" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO">
+	<insert id="insertChatMessageInfoQuery" parameterType="com.seya330.ranchat.core.chat.vo.ChatMessageVO">
 		INSERT INTO CHAT_MESSAGE_INFO
 		(SELECT 
 		#{messageId, jdbcType=VARCHAR} MSG_ID
@@ -32,7 +32,7 @@
 		FROM CHAT_ROOM_JOINNER WHERE CHAT_ROOM_ID = #{chatRoomId, jdbcType=VARCHAR})
 	</insert>
 	
-	<update id="updateChatMessageInfo" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO">
+	<update id="updateChatMessageInfo" parameterType="com.seya330.ranchat.core.chat.vo.ChatMessageVO">
 		UPDATE CHAT_MESSAGE_INFO
 		<set>
 			<if test="readYn != null ">
