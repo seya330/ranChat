@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.seya330.ranchat.dao.ChatDAO">
-	<select id="selectChatMessageCnt" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO" resultType="int">
+	<select id="selectChatMessageCnt" parameterType="com.seya330.ranchat.core.chat.vo.ChatMessageVO" resultType="int">
 		SELECT
 			COUNT(*) CNT
 		FROM
@@ -16,7 +16,7 @@
 		</where>
 	</select>
 
-	<select id="selectChatMessage" parameterType="com.seya330.ranchat.chat.vo.ChatMessageVO" resultType="com.seya330.ranchat.chat.vo.ChatMessageVO">
+	<select id="selectChatMessage" parameterType="com.seya330.ranchat.core.chat.vo.ChatMessageVO" resultType="com.seya330.ranchat.core.chat.vo.ChatMessageVO">
 	SELECT * FROM (
 		SELECT
 			MSG.MESSAGE_ID

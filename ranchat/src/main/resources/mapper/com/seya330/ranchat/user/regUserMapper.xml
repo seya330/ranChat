@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.seya330.ranchat.dao.RegUserDAO">
-	<insert id="insertRegUser" parameterType="com.seya330.ranchat.user.vo.RegUserVO">
+	<insert id="insertRegUser" parameterType="com.seya330.ranchat.core.user.vo.RegUserVO">
 		INSERT INTO REG_USER(
 			UNIQ_ID
 			, USER_ID
@@ -20,7 +20,7 @@
 		)
 	</insert>
 	
-	<select id="selectRegUserCnt" parameterType="com.seya330.ranchat.user.vo.RegUserVO" resultType="int">
+	<select id="selectRegUserCnt" parameterType="com.seya330.ranchat.core.user.vo.RegUserVO" resultType="int">
 		SELECT
 			COUNT(*) cnt
 		FROM
@@ -44,7 +44,7 @@
 			</if>
 	</select>
 	
-	<select id="selectRegUser" parameterType="com.seya330.ranchat.user.vo.RegUserVO" resultType="com.seya330.ranchat.user.vo.RegUserVO">
+	<select id="selectRegUser" parameterType="com.seya330.ranchat.core.user.vo.RegUserVO" resultType="com.seya330.ranchat.core.user.vo.RegUserVO">
 		SELECT
 			UNIQ_ID
 			, USER_ID

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.seya330.ranchat.chat.dao.TopicChatRoomDAO">
-	<select id="selectTopicChatRoom" parameterType="com.seya330.ranchat.chat.vo.TopicChatRoomVO" resultType="com.seya330.ranchat.chat.vo.TopicChatRoomVO">
+<mapper namespace="com.seya330.ranchat.infrastructure.chat.TopicChatRoomDAO">
+	<select id="selectTopicChatRoom" parameterType="com.seya330.ranchat.core.chat.vo.TopicChatRoomVO" resultType="com.seya330.ranchat.core.chat.vo.TopicChatRoomVO">
 		SELECT
 			CHAT_ROOM_ID,
 			CHAT_TOPIC,
@@ -14,7 +14,7 @@
 		</where>
 	</select>
 	
-	<insert id="insertTopicRoomVisit" parameterType="com.seya330.ranchat.chat.vo.TopicRoomVisitVO">
+	<insert id="insertTopicRoomVisit" parameterType="com.seya330.ranchat.core.chat.vo.TopicRoomVisitVO">
 		INSERT INTO TOPIC_ROOM_VISIT(VISITOR, CHAT_ROOM_ID, VISIT_DATE, VISIT_CNT)
 		VALUES(
 			#{visitor, jdbcType=VARCHAR},
@@ -24,7 +24,7 @@
 		)
 	</insert>
 	
-	<update id="updateTopicRoomVisit" parameterType="com.seya330.ranchat.chat.vo.TopicRoomVisitVO">
+	<update id="updateTopicRoomVisit" parameterType="com.seya330.ranchat.core.chat.vo.TopicRoomVisitVO">
 		UPDATE TOPIC_ROOM_VISIT
 		<set>
 			VISIT_DATE = NOW(),
@@ -35,7 +35,7 @@
 	</update>
 	
 	
-	<select id="selectTopicRoomVisitCnt" parameterType="com.seya330.ranchat.chat.vo.TopicRoomVisitVO" resultType="int">
+	<select id="selectTopicRoomVisitCnt" parameterType="com.seya330.ranchat.core.chat.vo.TopicRoomVisitVO" resultType="int">
 		SELECT
 			COUNT(*)
 		FROM
@@ -47,7 +47,7 @@
 		</where>
 	</select>
 	
-	<select id="selectTopicRoomVisit" parameterType="com.seya330.ranchat.chat.vo.TopicRoomVisitVO" resultType="com.seya330.ranchat.chat.vo.TopicRoomVisitVO">
+	<select id="selectTopicRoomVisit" parameterType="com.seya330.ranchat.core.chat.vo.TopicRoomVisitVO" resultType="com.seya330.ranchat.core.chat.vo.TopicRoomVisitVO">
 		SELECT
 			VISIT.VISITOR VISITOR,
 			VISIT.CHAT_ROOM_ID CHAT_ROOM_ID,
