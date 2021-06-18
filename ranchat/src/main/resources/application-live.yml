@@ -2,10 +2,9 @@ server:
   port: 2500
 spring:
   datasource:
-    url: jdbc:log4jdbc:mysql://localhost:3306/ranchat?characterEncoding=utf8
+    url: jdbc:mysql://localhost:3306/ranchat?characterEncoding=utf8
     username: ranchat
     password: R@nchat
-    driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     static-path-pattern: /static/**
   resources:
