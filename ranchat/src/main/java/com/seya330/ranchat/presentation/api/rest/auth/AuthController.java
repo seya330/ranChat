@@ -2,6 +2,8 @@ package com.seya330.ranchat.presentation.api.rest.auth;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.seya330.ranchat.presentation.api.rest.auth.converter.LoginRequestConverter;
+import com.seya330.ranchat.presentation.api.rest.auth.payload.LoginRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seya330.ranchat.application.user.service.UserService;
+import com.seya330.ranchat.application.user.service.RegUserApplicationService;
 import com.seya330.ranchat.core.user.vo.LoginResultType;
 import com.seya330.ranchat.core.user.vo.RegUserVO;
 
@@ -21,24 +23,18 @@ import com.seya330.ranchat.core.user.vo.RegUserVO;
 public class AuthController {
   private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
   @Autowired
-  UserService userService;
+  RegUserApplicationService userApplicationService;
 
   @CrossOrigin
   @PostMapping("/login")
-  public Object login(@RequestBody RegUserVO userVO) {
-    logger.info("login request user: " + userVO.getUserId());
+  public ResponseEntity<String> login(@RequestBody LoginRequest request) {
     HttpStatus result = HttpStatus.OK;
     String resultStr = "";
-    RegUserVO user = userService.getToken(userVO);
 
-    if (user.getLoginResultType() != LoginResultType.SUCCESS) {
-      result = HttpStatus.UNAUTHORIZED;
-      resultStr = user.getLoginResultType().toString();
-    } else {
-      resultStr = user.getToken();
-    }
+    String token = userApplicationService.getToken(LoginRequestConverter.INSTANCE
+        .toLoginCommand(request));
 
-    return ResponseEntity.status(result).body(user);
+    return ResponseEntity.status(result).body(token);
   }
 
   @GetMapping("/login2")
@@ -46,7 +42,7 @@ public class AuthController {
     logger.info("login request user: " + userVO.getUserId());
     HttpStatus result = HttpStatus.OK;
     String resultStr = "";
-    RegUserVO user = userService.getToken(userVO);
+    RegUserVO user = userApplicationService.getToken(userVO);
 
     if (user.getLoginResultType() != LoginResultType.SUCCESS) {
       result = HttpStatus.UNAUTHORIZED;

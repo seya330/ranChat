@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.seya330.ranchat.application.chat.service.TopicChatService;
-import com.seya330.ranchat.core.chat.vo.TopicChatMessageVO;
-import com.seya330.ranchat.core.chat.vo.TopicChatRoomVO;
-import com.seya330.ranchat.core.chat.vo.TopicChatVO;
-import com.seya330.ranchat.core.chat.vo.TopicRoomVisitVO;
+import com.seya330.ranchat.core.chatroom.vo.TopicChatMessageVO;
+import com.seya330.ranchat.core.chatroom.vo.TopicChatRoomVO;
+import com.seya330.ranchat.core.chatroom.vo.TopicChatVO;
+import com.seya330.ranchat.core.chatroom.vo.TopicRoomVisitVO;
 import com.seya330.ranchat.share.util.JwtUtil;
 import com.seya330.ranchat.core.user.vo.RegUserVO;
 

@@ -3,12 +3,12 @@ package com.seya330.ranchat.presentation.api.rest.chat;
 import com.seya330.ranchat.application.chat.service.ChatMessageService;
 import com.seya330.ranchat.application.chat.service.ChatRoomService;
 import com.seya330.ranchat.application.chat.service.ChatService;
-import com.seya330.ranchat.application.user.service.UserService;
-import com.seya330.ranchat.core.chat.domain.ChatRoomRepository;
-import com.seya330.ranchat.core.chat.domain.ChatUserBean;
-import com.seya330.ranchat.core.chat.vo.ChatMessageVO;
-import com.seya330.ranchat.core.chat.vo.ChatResponse;
-import com.seya330.ranchat.core.chat.vo.ChatRoomVO;
+import com.seya330.ranchat.application.user.service.RegUserApplicationService;
+import com.seya330.ranchat.core.chatroom.domain.ChatRoomRepository;
+import com.seya330.ranchat.core.chatroom.domain.ChatUserBean;
+import com.seya330.ranchat.core.chatroom.vo.ChatMessageVO;
+import com.seya330.ranchat.core.chatroom.vo.ChatResponse;
+import com.seya330.ranchat.core.chatroom.vo.ChatRoomVO;
 import com.seya330.ranchat.core.user.vo.RegUserVO;
 import com.seya330.ranchat.share.util.JwtUtil;
 import com.seya330.ranchat.share.util.UserUtil;
@@ -53,7 +53,7 @@ public class ChatController {
   private ChatService chatService;
 
   @Autowired
-  private UserService userService;
+  private RegUserApplicationService userApplicationService;
 
   @Autowired
   private ChatRoomService chatRoomService;

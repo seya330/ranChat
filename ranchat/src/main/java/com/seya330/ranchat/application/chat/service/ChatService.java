@@ -18,15 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import com.seya330.ranchat.infrastructure.chat.ChatRoomDAO;
-import com.seya330.ranchat.core.chat.vo.ChatMessageVO;
-import com.seya330.ranchat.core.chat.vo.ChatResponse;
-import com.seya330.ranchat.core.chat.vo.ChatRoomJoinnerVO;
-import com.seya330.ranchat.core.chat.vo.MessageType;
-import com.seya330.ranchat.core.chat.vo.ChatResponse.ResponseResult;
-import com.seya330.ranchat.core.chat.vo.ChatRoomVO;
-import com.seya330.ranchat.core.chat.vo.GroupChatResult;
-import com.seya330.ranchat.core.chat.vo.GroupChatVO;
-import com.seya330.ranchat.application.user.service.UserService;
+import com.seya330.ranchat.core.chatroom.vo.ChatMessageVO;
+import com.seya330.ranchat.core.chatroom.vo.ChatResponse;
+import com.seya330.ranchat.core.chatroom.vo.ChatRoomJoinnerVO;
+import com.seya330.ranchat.core.chatroom.vo.MessageType;
+import com.seya330.ranchat.core.chatroom.vo.ChatResponse.ResponseResult;
+import com.seya330.ranchat.core.chatroom.vo.ChatRoomVO;
+import com.seya330.ranchat.core.chatroom.vo.GroupChatResult;
+import com.seya330.ranchat.core.chatroom.vo.GroupChatVO;
+import com.seya330.ranchat.application.user.service.RegUserApplicationService;
 import com.seya330.ranchat.core.user.vo.RegUserVO;
 
 @Service
@@ -41,7 +41,7 @@ public class ChatService {
     private SimpMessagingTemplate messagingTemplate;
 	
 	@Autowired
-	private UserService userService;
+	private RegUserApplicationService userApplicationService;
 	
 	@Autowired
 	private ChatRoomDAO chatRoomDAO;
@@ -163,7 +163,7 @@ public class ChatService {
     	for(String uniqId : chatRoomVO.getInviteUniqIdList()) {
     		RegUserVO param = new RegUserVO();
     		param.setUniqId(uniqId);
-    		RegUserVO userVO = userService.getUserOne(param);
+    		RegUserVO userVO = userApplicationService.getUserOne(param);
     		if(userVO == null) {
     			result.setResult(GroupChatResult.INVALID_USER_ID);
     			return result;

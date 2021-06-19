@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.seya330.ranchat.infrastructure.chat.ChatDAO;
 import com.seya330.ranchat.infrastructure.chat.ChatRoomDAO;
-import com.seya330.ranchat.core.chat.vo.ChatRoomJoinnerVO;
-import com.seya330.ranchat.core.chat.vo.ChatRoomVO;
+import com.seya330.ranchat.core.chatroom.vo.ChatRoomJoinnerVO;
+import com.seya330.ranchat.core.chatroom.vo.ChatRoomVO;
 
 @Service
 public class ChatRoomService {

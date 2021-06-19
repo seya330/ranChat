@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import com.seya330.ranchat.core.chat.vo.ChatMessageVO;
+import com.seya330.ranchat.core.chatroom.vo.ChatMessageVO;
 
 @Repository
 public class ChatDAO {

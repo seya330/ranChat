@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.seya330.ranchat.infrastructure.chat.TopicChatMessageDAO;
 import com.seya330.ranchat.infrastructure.chat.TopicChatRoomDAO;
-import com.seya330.ranchat.core.chat.vo.TopicChatMessageVO;
-import com.seya330.ranchat.core.chat.vo.TopicChatRoomVO;
-import com.seya330.ranchat.core.chat.vo.TopicRoomVisitVO;
+import com.seya330.ranchat.core.chatroom.vo.TopicChatMessageVO;
+import com.seya330.ranchat.core.chatroom.vo.TopicChatRoomVO;
+import com.seya330.ranchat.core.chatroom.vo.TopicRoomVisitVO;
 import com.seya330.ranchat.share.util.IDGeneratorUtil;
 
 @Service

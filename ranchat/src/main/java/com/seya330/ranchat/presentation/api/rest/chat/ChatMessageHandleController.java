@@ -12,13 +12,13 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seya330.ranchat.core.chat.domain.ChatRoomRepository;
+import com.seya330.ranchat.core.chatroom.domain.ChatRoomRepository;
 import com.seya330.ranchat.application.chat.service.ChatMessageService;
 import com.seya330.ranchat.application.chat.service.ChatService;
 import com.seya330.ranchat.application.chat.service.TopicChatService;
-import com.seya330.ranchat.core.chat.vo.ChatMessageVO;
-import com.seya330.ranchat.core.chat.vo.MessageType;
-import com.seya330.ranchat.core.chat.vo.TopicChatMessageVO;
+import com.seya330.ranchat.core.chatroom.vo.ChatMessageVO;
+import com.seya330.ranchat.core.chatroom.vo.MessageType;
+import com.seya330.ranchat.core.chatroom.vo.TopicChatMessageVO;
 import com.seya330.ranchat.share.util.JwtUtil;
 import com.seya330.ranchat.core.user.vo.RegUserVO;
 

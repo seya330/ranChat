@@ -1,5 +1,7 @@
 package com.seya330.ranchat.share.util;
 
+import com.seya330.ranchat.application.user.vo.RegUserVo;
+import com.seya330.ranchat.core.user.domain.RegUser;
 import com.seya330.ranchat.core.user.vo.RegUserVO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -42,6 +44,13 @@ public class JwtUtil {
     HashMap<String, Object> claims = new HashMap<String, Object>();
     claims.put("uniqId", userBean.getUniqId());
     claims.put("userId", userBean.getUserId());
+    return this.generateToken(claims, "userAuth", "WEB");
+  }
+
+  public String userBeanToJwtToken(RegUserVo regUser) {
+    HashMap<String, Object> claims = new HashMap<String, Object>();
+    claims.put("uniqId", regUser.getUniqId());
+    claims.put("userId", regUser.getUserId());
     return this.generateToken(claims, "userAuth", "WEB");
   }
 
